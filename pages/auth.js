@@ -53,10 +53,9 @@ const AuthPage = () => {
           </p>
           <form className={styles.form} onSubmit={handleSubmit}>
             {mode === 'register' && (
-              <label className={styles.label}>
+              <label>
                 Имя
                 <input
-                  className={styles.input}
                   type="text"
                   name="name"
                   value={form.name}
@@ -66,10 +65,9 @@ const AuthPage = () => {
                 />
               </label>
             )}
-            <label className={styles.label}>
+            <label>
               Email
               <input
-                className={styles.input}
                 type="email"
                 name="email"
                 value={form.email}
@@ -78,10 +76,9 @@ const AuthPage = () => {
                 required
               />
             </label>
-            <label className={styles.label}>
+            <label>
               Пароль
               <input
-                className={styles.input}
                 type="password"
                 name="password"
                 value={form.password}

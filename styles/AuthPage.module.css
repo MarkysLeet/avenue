@@ -27,14 +27,14 @@
   text-align: left;
 }
 
-.label {
+label {
   display: flex;
   flex-direction: column;
   gap: 8px;
   font-size: 0.9rem;
 }
 
-.input {
+input {
   padding: 12px;
   border-radius: var(--radius-sm);
   border: 1px solid rgba(254, 180, 167, 0.6);
