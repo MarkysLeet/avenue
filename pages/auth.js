@@ -54,24 +54,22 @@ const AuthPage = () => {
             Создайте аккаунт, чтобы отслеживать заказы и быстрее оформлять покупки.
           </p>
           <form className={styles.form} onSubmit={handleSubmit}>
-            {isRegister && (
-              <label className={styles.label}>
+            {mode === 'register' && (
+              <label>
                 Имя
                 <input
-                  className={styles.input}
                   type="text"
                   name="name"
                   value={form.name}
                   onChange={handleChange}
                   placeholder="Например, Анна"
-                  required={isRegister}
+                  required={mode === 'register'}
                 />
               </label>
             )}
-            <label className={styles.label}>
+            <label>
               Email
               <input
-                className={styles.input}
                 type="email"
                 name="email"
                 value={form.email}
@@ -80,10 +78,9 @@ const AuthPage = () => {
                 required
               />
             </label>
-            <label className={styles.label}>
+            <label>
               Пароль
               <input
-                className={styles.input}
                 type="password"
                 name="password"
                 value={form.password}
@@ -94,14 +91,14 @@ const AuthPage = () => {
             </label>
             {error && <p className={styles.error}>{error}</p>}
             {message && <p className={styles.success}>{message}</p>}
-            <button type="submit" className={styles.submitButton}>
-              {isRegister ? 'Зарегистрироваться' : 'Войти'}
+            <button type="submit" className={styles.submit}>
+              {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </button>
           </form>
           <button className={styles.switch} onClick={toggleMode}>
-            {isRegister
-              ? 'Уже есть аккаунт? Войдите'
-              : 'Нет аккаунта? Зарегистрируйтесь'}
+            {mode === 'login'
+              ? 'Нет аккаунта? Зарегистрируйтесь'
+              : 'Уже есть аккаунт? Войдите'}
           </button>
         </div>
       </section>
