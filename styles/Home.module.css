@@ -1,0 +1,14 @@
+.section {
+  margin-top: 64px;
+}
+
+.section h2 {
+  font-size: 2rem;
+  margin-bottom: 24px;
+}
+
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+}
