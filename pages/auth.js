@@ -43,11 +43,13 @@ const AuthPage = () => {
     }
   };
 
+  const isRegister = mode === 'register';
+
   return (
     <Layout title="Вход и регистрация — Avenue Beauty">
       <section className={styles.section}>
         <div className={styles.card}>
-          <h1>{mode === 'login' ? 'Вход' : 'Регистрация'}</h1>
+          <h1>{isRegister ? 'Регистрация' : 'Вход'}</h1>
           <p className={styles.subtitle}>
             Создайте аккаунт, чтобы отслеживать заказы и быстрее оформлять покупки.
           </p>
