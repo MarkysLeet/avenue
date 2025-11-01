@@ -1,0 +1,76 @@
+.item {
+  display: grid;
+  grid-template-columns: 120px 1fr 220px;
+  gap: 24px;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: rgba(254, 213, 205, 0.4);
+  align-items: center;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.info h4 {
+  margin: 0 0 8px;
+}
+
+.price {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.quantityLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.quantityLabel input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid rgba(254, 180, 167, 0.6);
+  border-radius: var(--radius-sm);
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.removeButton {
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.removeButton:hover {
+  color: #ff8c7a;
+}
+
+@media (max-width: 768px) {
+  .item {
+    grid-template-columns: 90px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .controls {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}

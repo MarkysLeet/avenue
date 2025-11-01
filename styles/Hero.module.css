@@ -1,0 +1,98 @@
+.hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 32px;
+  align-items: center;
+  padding: 48px;
+  background: linear-gradient(135deg, rgba(254, 180, 167, 0.25), rgba(248, 237, 235, 0.9));
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.content h1 {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  margin-bottom: 16px;
+}
+
+.content p {
+  color: var(--color-muted);
+  line-height: 1.8;
+  max-width: 480px;
+}
+
+.button {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 14px 24px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-soft);
+  transition: var(--transition-base);
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(254, 180, 167, 0.35);
+}
+
+.decor {
+  position: relative;
+  min-height: 240px;
+}
+
+.bubbleOne,
+.bubbleTwo,
+.bubbleThree {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(254, 213, 205, 0.75);
+  filter: blur(0.5px);
+  animation: float 8s ease-in-out infinite;
+}
+
+.bubbleOne {
+  width: 200px;
+  height: 200px;
+  top: 20px;
+  right: 40px;
+}
+
+.bubbleTwo {
+  width: 140px;
+  height: 140px;
+  bottom: 20px;
+  left: 30px;
+  animation-delay: 2s;
+}
+
+.bubbleThree {
+  width: 90px;
+  height: 90px;
+  top: 80px;
+  left: 140px;
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 32px 24px;
+  }
+
+  .decor {
+    order: -1;
+    min-height: 180px;
+  }
+}
