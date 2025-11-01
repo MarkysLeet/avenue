@@ -57,6 +57,9 @@ const AuthPage = () => {
                 Имя
                 <input
                   className={styles.input}
+              <label>
+                Имя
+                <input
                   type="text"
                   name="name"
                   value={form.name}
@@ -70,6 +73,9 @@ const AuthPage = () => {
               Email
               <input
                 className={styles.input}
+            <label>
+              Email
+              <input
                 type="email"
                 name="email"
                 value={form.email}
@@ -82,6 +88,9 @@ const AuthPage = () => {
               Пароль
               <input
                 className={styles.input}
+            <label>
+              Пароль
+              <input
                 type="password"
                 name="password"
                 value={form.password}
@@ -93,6 +102,7 @@ const AuthPage = () => {
             {error && <p className={styles.error}>{error}</p>}
             {message && <p className={styles.success}>{message}</p>}
             <button type="submit" className={styles.submitButton}>
+            <button type="submit" className={styles.submit}>
               {mode === 'login' ? 'Войти' : 'Зарегистрироваться'}
             </button>
           </form>
