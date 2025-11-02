@@ -1,0 +1,17 @@
+.wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-background);
+}
+
+.main {
+  flex: 1;
+  padding: 48px;
+}
+
+@media (max-width: 768px) {
+  .main {
+    padding: 32px 16px;
+  }
+}

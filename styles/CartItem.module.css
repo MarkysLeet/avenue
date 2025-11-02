@@ -1,0 +1,79 @@
+.item {
+  display: grid;
+  grid-template-columns: 120px 1fr 220px;
+  gap: 24px;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: rgba(248, 221, 232, 0.35);
+  border: 1px solid rgba(231, 223, 228, 0.8);
+  align-items: center;
+}
+
+.imageWrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--color-surface);
+  border: 1px solid rgba(231, 223, 228, 0.7);
+}
+
+.info h4 {
+  margin: 0 0 8px;
+}
+
+.price {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.quantityLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--color-muted);
+}
+
+.quantityLabel input {
+  width: 80px;
+  padding: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+}
+
+.removeButton {
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.removeButton:hover {
+  color: rgba(226, 0, 122, 0.8);
+}
+
+@media (max-width: 768px) {
+  .item {
+    grid-template-columns: 90px 1fr;
+    grid-template-rows: auto auto;
+  }
+
+  .controls {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
