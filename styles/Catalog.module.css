@@ -7,6 +7,41 @@
   margin-bottom: 12px;
 }
 
+.breadcrumbs {
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  color: var(--color-muted);
+}
+
+.breadcrumbs ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.breadcrumbs li::after {
+  content: '\203A';
+  margin-left: 8px;
+  color: var(--color-muted);
+}
+
+.breadcrumbs li:last-child::after {
+  content: '';
+}
+
+.breadcrumbs a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.breadcrumbs a:hover,
+.breadcrumbs a:focus {
+  color: var(--color-text);
+}
+
 .description {
   max-width: 520px;
   color: var(--color-muted);

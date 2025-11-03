@@ -70,11 +70,29 @@
   font-weight: 600;
   cursor: pointer;
   transition: var(--transition-base);
+  position: relative;
 }
 
 .cartButton:hover {
   box-shadow: 0 16px 28px rgba(226, 0, 122, 0.2);
   transform: translateY(-2px);
+}
+
+.av-cart-button-pulse {
+  animation: av-cart-button-pulse 0.28s ease;
+  box-shadow: 0 0 0 10px rgba(226, 0, 122, 0.12);
+}
+
+@keyframes av-cart-button-pulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
 .more {
@@ -91,4 +109,34 @@
 .more:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
+}
+
+.av-cart-flight {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff 10%, rgba(226, 0, 122, 0.9));
+  box-shadow: 0 10px 18px rgba(226, 0, 122, 0.25);
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0;
+}
+
+.av-cart-flight-active {
+  animation: av-cart-flight 0.45s ease-in-out forwards;
+}
+
+@keyframes av-cart-flight {
+  0% {
+    opacity: 0.75;
+    transform: translate3d(0, 0, 0) scale(0.6);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--av-cart-flight-x), var(--av-cart-flight-y), 0) scale(0.2);
+  }
 }

@@ -16,10 +16,13 @@ const Header = () => {
   const { count } = useCart();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isBadgeAnimating, setIsBadgeAnimating] = useState(false);
   const searchButtonRef = useRef(null);
   const searchInputRef = useRef(null);
   const searchPanelRef = useRef(null);
   const searchPanelId = useId();
+  const badgeTimerRef = useRef(null);
+  const previousCountRef = useRef(count);
 
   const closeSearch = useCallback(
     (options = { shouldFocusButton: true, shouldResetTerm: false }) => {
@@ -75,6 +78,34 @@ const Header = () => {
   useEffect(() => {
     setIsSearchOpen(false);
   }, [router.asPath]);
+
+  useEffect(() => {
+    if (previousCountRef.current === count) {
+      return;
+    }
+
+    if (badgeTimerRef.current) {
+      clearTimeout(badgeTimerRef.current);
+      badgeTimerRef.current = null;
+    }
+
+    if (count > 0) {
+      setIsBadgeAnimating(true);
+      badgeTimerRef.current = setTimeout(() => {
+        setIsBadgeAnimating(false);
+      }, 220);
+    } else {
+      setIsBadgeAnimating(false);
+    }
+
+    previousCountRef.current = count;
+  }, [count]);
+
+  useEffect(() => () => {
+    if (badgeTimerRef.current) {
+      clearTimeout(badgeTimerRef.current);
+    }
+  }, []);
 
   const handleSearchToggle = () => {
     if (isSearchOpen) {
@@ -179,13 +210,28 @@ const Header = () => {
               <path d="M4 20c1.5-4 6-6 8-6s6.5 2 8 6" />
             </svg>
           </Link>
-          <Link href="/cart" className={styles.iconButton} aria-label="Корзина">
+          <Link
+            href="/cart"
+            className={styles.iconButton}
+            aria-label="Корзина"
+            data-av-cart-target="icon"
+          >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <path d="M3 5h2l2 12h10l2-9H7" />
               <circle cx="10" cy="19" r="1.4" />
               <circle cx="17" cy="19" r="1.4" />
             </svg>
-            {count > 0 ? <span className={styles.cartBadge}>{count}</span> : null}
+            {count > 0 ? (
+              <span
+                className={
+                  isBadgeAnimating
+                    ? `${styles.cartBadge} ${styles['av-cart-badge-bounce']}`
+                    : styles.cartBadge
+                }
+              >
+                {count}
+              </span>
+            ) : null}
           </Link>
         </div>
         <div className={styles.userArea}>
