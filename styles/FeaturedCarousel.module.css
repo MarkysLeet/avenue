@@ -1,0 +1,139 @@
+.carousel {
+  position: relative;
+}
+
+.track {
+  --gap: 24px;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(240px, 1fr);
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 8px 4px 16px;
+  scrollbar-width: none;
+}
+
+.track::-webkit-scrollbar {
+  display: none;
+}
+
+.slide {
+  scroll-snap-align: start;
+  display: flex;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  background: #ffffff;
+  color: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 16px 24px rgba(26, 26, 26, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.navButton:hover {
+  transform: translateY(-50%) translateY(-2px);
+  border-color: var(--color-primary);
+  box-shadow: 0 18px 30px rgba(226, 0, 122, 0.18);
+  color: var(--color-primary);
+}
+
+.navButton span {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.navButtonPrev {
+  left: -18px;
+}
+
+.navButtonNext {
+  right: -18px;
+}
+
+.dots {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(26, 26, 26, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.dot:hover {
+  transform: scale(1.1);
+}
+
+.dotActive {
+  background: var(--color-primary);
+}
+
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+}
+
+@media (max-width: 1024px) {
+  .navButtonPrev {
+    left: -6px;
+  }
+
+  .navButtonNext {
+    right: -6px;
+  }
+}
+
+@media (max-width: 768px) {
+  .track {
+    --gap: 18px;
+    grid-auto-columns: minmax(70vw, 1fr);
+  }
+
+  .navButton {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .track {
+    grid-auto-columns: minmax(280px, calc((100% - var(--gap)) / 2));
+  }
+}
+
+@media (min-width: 1024px) {
+  .track {
+    grid-auto-columns: minmax(280px, calc((100% - var(--gap) * 2) / 3));
+  }
+}
+
+@media (min-width: 1280px) {
+  .track {
+    grid-auto-columns: minmax(300px, calc((100% - var(--gap) * 3) / 4));
+  }
+}

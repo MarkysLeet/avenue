@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import styles from '../styles/Hero.module.css';
 
 const Hero = () => {
@@ -12,9 +13,9 @@ const Hero = () => {
           умных девайсов. Выберите продукты, которые подчеркнут вашу индивидуальность.
         </p>
         <div className={styles.ctaGroup}>
-          <a className={styles.primaryCta} href="#catalog">
+          <Link className={styles.primaryCta} href="/categories">
             Смотреть каталог
-          </a>
+          </Link>
           <a className={styles.secondaryCta} href="#featured">
             Новинки
           </a>

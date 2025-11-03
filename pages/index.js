@@ -1,7 +1,7 @@
 import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import CategoryGrid from '../components/CategoryGrid';
-import ProductCard from '../components/ProductCard';
+import FeaturedCarousel from '../components/FeaturedCarousel';
 import { categories, products } from '../data/products';
 import styles from '../styles/Home.module.css';
 
@@ -38,11 +38,7 @@ const Home = () => {
           <h2>Новинки &amp; рекомендации</h2>
           <p>Подборка продуктов, которые наши клиенты выбирают снова и снова.</p>
         </div>
-        <div className={styles.productsGrid}>
-          {featured.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        <FeaturedCarousel products={featured} />
       </section>
       <section className={`${styles.section} ${styles.whySection}`}>
         <div className={styles.sectionHeaderCentered}>
