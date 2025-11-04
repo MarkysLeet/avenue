@@ -1,14 +1,32 @@
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import CartItem from '../components/CartItem';
 import { useCart } from '../contexts/CartContext';
 import { useAuth } from '../contexts/AuthContext';
+import { ensureDefaultAddress, readAddresses } from '../utils/addressStorage';
 import styles from '../styles/CartPage.module.css';
 
 const CartPage = () => {
   const { items, total, updateQuantity, removeFromCart, clearCart } = useCart();
   const { isAuthenticated } = useAuth();
   const router = useRouter();
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState('');
+
+  useEffect(() => {
+    const stored = readAddresses();
+    const normalized = ensureDefaultAddress(stored.addresses);
+    setAddresses(normalized.addresses);
+    const defaultAddress = normalized.addresses.find((address) => address.isDefault);
+    setSelectedAddressId(defaultAddress ? defaultAddress.id : '');
+  }, []);
+
+  const handleAddressChange = (event) => {
+    setSelectedAddressId(event.target.value);
+  };
+
+  const selectedAddress = addresses.find((address) => address.id === selectedAddressId);
 
   return (
     <Layout title="Корзина — Avenue Beauty">
@@ -31,6 +49,41 @@ const CartPage = () => {
             <aside className={styles.summary}>
               <h2>Итого</h2>
               <p className={styles.total}>{total.toLocaleString()} ₽</p>
+              {addresses.length > 0 ? (
+                <div className={styles['av-cart-address']}>
+                  <label htmlFor="cart-address-select">Адрес доставки</label>
+                  <select
+                    id="cart-address-select"
+                    value={selectedAddressId}
+                    onChange={handleAddressChange}
+                    className={styles['av-cart-address__select']}
+                  >
+                    {addresses.map((address) => (
+                      <option key={address.id} value={address.id}>
+                        {address.label}
+                      </option>
+                    ))}
+                  </select>
+                  {selectedAddress ? (
+                    <p className={styles['av-cart-address__preview']}>
+                      {[selectedAddress.country, selectedAddress.city, selectedAddress.street]
+                        .filter(Boolean)
+                        .join(', ') || 'Уточните адрес в личном кабинете'}
+                    </p>
+                  ) : null}
+                </div>
+              ) : (
+                <div className={styles['av-cart-address-empty']}>
+                  <p>Добавьте адрес доставки в личном кабинете, чтобы выбрать его при оформлении.</p>
+                  <button
+                    type="button"
+                    className={styles['av-cart-address-empty__cta']}
+                    onClick={() => router.push('/account?tab=address')}
+                  >
+                    Добавить адрес
+                  </button>
+                </div>
+              )}
               <button className={styles.checkoutButton} onClick={clearCart}>
                 Очистить корзину
               </button>
@@ -53,7 +106,7 @@ const CartPage = () => {
               <button
                 type="button"
                 className={styles['av-auth-hint__cta']}
-                onClick={() => router.push('/auth?returnTo=/cart')}
+                onClick={() => router.push('/auth/login?returnTo=/cart')}
               >
                 Войти
               </button>

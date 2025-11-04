@@ -11,7 +11,7 @@ const Footer = () => {
         <div className={styles.links}>
           <a href="/catalog/nail-polish">Лаки</a>
           <a href="/catalog/manicure-tools">Оборудование</a>
-          <a href="/auth">Вход / Регистрация</a>
+          <a href="/auth/login">Вход / Регистрация</a>
         </div>
         <div className={styles.socials}>
           <a href="#" aria-label="Instagram">

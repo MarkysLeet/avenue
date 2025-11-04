@@ -139,10 +139,18 @@ const Toaster = ({ toasts, onDismiss }) => {
   }
 
   return (
-    <div className={styles['av-toast-viewport']} aria-live="polite" aria-relevant="additions removals">
-      {toasts.map((toast) => (
-        <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
-      ))}
+    <div className="av-toaster fixed right-4 bottom-4 z-[2000] md:right-6 md:bottom-6">
+      <div className={styles['av-toaster']}>
+        <div
+          className={styles['av-toast-viewport']}
+          aria-live="polite"
+          aria-relevant="additions removals"
+        >
+          {toasts.map((toast) => (
+            <ToastItem key={toast.id} toast={toast} onDismiss={onDismiss} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

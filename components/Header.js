@@ -204,6 +204,11 @@ const Header = () => {
               </form>
             </div>
           </div>
+          <Link href="/favorites" className={styles.iconButton} aria-label="Избранное">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+              <path d="M12 20.7 10.55 19.4C5.4 14.8 2 11.7 2 8A5 5 0 0 1 7 3a4.5 4.5 0 0 1 5 3 4.5 4.5 0 0 1 5-3 5 5 0 0 1 5 5c0 3.7-3.4 6.8-8.55 11.4Z" />
+            </svg>
+          </Link>
           <Link href="/account" className={styles.iconButton} aria-label="Профиль">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
               <circle cx="12" cy="8" r="4" />
@@ -243,7 +248,7 @@ const Header = () => {
               </button>
             </>
           ) : (
-            <Link href="/auth" className={styles.primaryButton}>
+            <Link href="/auth/login" className={styles.primaryButton}>
               Вход / Регистрация
             </Link>
           )}

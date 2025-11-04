@@ -1,20 +1,26 @@
+.av-toaster {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+  pointer-events: none;
+  width: min(360px, calc(100vw - 32px));
+}
+
 .av-toast-viewport {
-  position: fixed;
-  top: 24px;
-  right: 24px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 16px;
-  z-index: 1000;
-  pointer-events: none;
-  max-width: min(360px, calc(100vw - 32px));
 }
 
 @media (max-width: 640px) {
+  .av-toaster {
+    align-items: center;
+    width: min(360px, calc(100vw - 24px));
+  }
+
   .av-toast-viewport {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
     align-items: stretch;
   }
 }

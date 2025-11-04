@@ -6,7 +6,10 @@ const AuthContext = createContext({
   user: null,
   register: () => {},
   login: () => {},
-  logout: () => {}
+  logout: () => {},
+  updateProfile: () => {},
+  changeEmail: () => {},
+  changePassword: () => {}
 });
 
 export const AuthProvider = ({ children }) => {
@@ -35,7 +38,7 @@ export const AuthProvider = ({ children }) => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   }, [user]);
 
-  const register = ({ name, email, password }) => {
+  const register = ({ name, email, password, firstName = '', lastName = '', phone = '' }) => {
     if (typeof window === 'undefined') return false;
     const stored = window.localStorage.getItem(STORAGE_KEY);
     const data = stored ? JSON.parse(stored) : { users: [], currentUser: null };
@@ -45,7 +48,14 @@ export const AuthProvider = ({ children }) => {
       throw new Error('Пользователь с таким email уже зарегистрирован');
     }
 
-    const newUser = { name, email, password };
+    const newUser = {
+      name,
+      email,
+      password,
+      firstName,
+      lastName,
+      phone
+    };
     const updated = {
       users: [...data.users, newUser],
       currentUser: newUser
@@ -78,12 +88,86 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const withStoredData = (callback) => {
+    if (typeof window === 'undefined') return null;
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    const data = stored ? JSON.parse(stored) : { users: [], currentUser: null };
+    if (!data.currentUser) {
+      throw new Error('Пользователь не авторизован');
+    }
+    const result = callback(data);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    return result;
+  };
+
+  const updateProfile = (updates) => {
+    if (!user) {
+      throw new Error('Пользователь не авторизован');
+    }
+    const result = withStoredData((data) => {
+      const updatedUser = { ...data.currentUser, ...updates };
+      data.users = data.users.map((item) =>
+        item.email === data.currentUser.email ? updatedUser : item
+      );
+      data.currentUser = updatedUser;
+      setUser(updatedUser);
+      return updatedUser;
+    });
+    return result;
+  };
+
+  const changeEmail = (newEmail) => {
+    if (!newEmail) {
+      throw new Error('Укажите email');
+    }
+    const trimmedEmail = newEmail.trim();
+    const result = withStoredData((data) => {
+      const currentEmail = data.currentUser.email;
+      const exists = data.users.find(
+        (item) => item.email === trimmedEmail && item.email !== currentEmail
+      );
+      if (exists) {
+        throw new Error('Email уже используется другим аккаунтом');
+      }
+      const updatedUser = { ...data.currentUser, email: trimmedEmail };
+      data.users = data.users.map((item) =>
+        item.email === currentEmail ? updatedUser : item
+      );
+      data.currentUser = updatedUser;
+      setUser(updatedUser);
+      return updatedUser;
+    });
+    return result;
+  };
+
+  const changePassword = ({ oldPassword, newPassword }) => {
+    if (!oldPassword || !newPassword) {
+      throw new Error('Введите текущий и новый пароль');
+    }
+    const result = withStoredData((data) => {
+      if (data.currentUser.password !== oldPassword) {
+        throw new Error('Текущий пароль указан неверно');
+      }
+      const updatedUser = { ...data.currentUser, password: newPassword };
+      data.users = data.users.map((item) =>
+        item.email === data.currentUser.email ? updatedUser : item
+      );
+      data.currentUser = updatedUser;
+      setUser(updatedUser);
+      return true;
+    });
+    return result;
+  };
+
   const value = useMemo(
     () => ({
       user,
       register,
       login,
       logout,
+      updateProfile,
+      changeEmail,
+      changePassword,
       isAuthenticated: Boolean(user)
     }),
     [user]

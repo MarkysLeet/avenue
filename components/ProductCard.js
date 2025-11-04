@@ -130,7 +130,7 @@ const ProductCard = ({ product }) => {
         message: 'Войдите в аккаунт, чтобы добавлять в избранное',
         actionLabel: 'Войти',
         onAction: () => {
-          router.push('/auth?returnTo=/account?tab=favorites');
+          router.push('/auth/login?returnTo=/favorites');
         }
       });
       return;

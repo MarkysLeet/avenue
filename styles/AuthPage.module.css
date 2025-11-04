@@ -28,11 +28,21 @@
   text-align: left;
 }
 
+.av-auth-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
 .label {
   display: flex;
   flex-direction: column;
   gap: 8px;
   font-size: 0.9rem;
+}
+
+.av-password-label {
+  position: relative;
 }
 
 .input {
@@ -42,6 +52,64 @@
   background: var(--color-surface);
   font-size: 1rem;
   transition: var(--transition-base);
+}
+
+.av-password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.av-password-field .input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.av-password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  color: var(--color-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+
+.av-password-toggle:hover,
+.av-password-toggle:focus-visible {
+  color: var(--color-primary);
+  background: rgba(226, 0, 122, 0.12);
+  outline: none;
+}
+
+.av-password-toggle svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  fill: none;
+}
+
+.av-switch-row {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.av-switch-hint {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
 }
 
 .input:focus {
@@ -87,6 +155,10 @@
 }
 
 @media (max-width: 540px) {
+  .av-auth-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
   .card {
     padding: 24px;
   }
