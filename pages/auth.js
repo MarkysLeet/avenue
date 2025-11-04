@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useAuth } from '../contexts/AuthContext';
 import styles from '../styles/AuthPage.module.css';
 
 const AuthPage = () => {
   const { register, login } = useAuth();
+  const router = useRouter();
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -30,6 +32,7 @@ const AuthPage = () => {
       if (mode === 'login') {
         login({ email: form.email, password: form.password });
         setMessage('Вы успешно вошли!');
+        router.replace('/');
       } else {
         if (!form.name) {
           setError('Введите имя для регистрации');
@@ -37,6 +40,7 @@ const AuthPage = () => {
         }
         register({ name: form.name, email: form.email, password: form.password });
         setMessage('Регистрация прошла успешно!');
+        router.replace('/');
       }
     } catch (authError) {
       setError(authError.message);

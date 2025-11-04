@@ -2,16 +2,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
+import { useFavorites } from '../contexts/FavoritesContext';
 import styles from '../styles/ProductCard.module.css';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const buttonRef = useRef(null);
   const [isButtonAnimating, setIsButtonAnimating] = useState(false);
   const [flight, setFlight] = useState(null);
+  const [isFavoritePulsing, setIsFavoritePulsing] = useState(false);
   const buttonTimerRef = useRef(null);
   const flightTimerRef = useRef(null);
   const frameRef = useRef(null);
+  const favoriteTimerRef = useRef(null);
+
+  const favoriteActive = isFavorite(product.id);
 
   useEffect(() => {
     return () => {
@@ -24,6 +30,9 @@ const ProductCard = ({ product }) => {
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
         frameRef.current = null;
+      }
+      if (favoriteTimerRef.current) {
+        clearTimeout(favoriteTimerRef.current);
       }
     };
   }, []);
@@ -90,6 +99,19 @@ const ProductCard = ({ product }) => {
     triggerFlightAnimation();
   };
 
+  const handleToggleFavorite = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleFavorite(product.id);
+    if (favoriteTimerRef.current) {
+      clearTimeout(favoriteTimerRef.current);
+    }
+    setIsFavoritePulsing(true);
+    favoriteTimerRef.current = setTimeout(() => {
+      setIsFavoritePulsing(false);
+    }, 220);
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.imageWrapper}>
@@ -100,6 +122,24 @@ const ProductCard = ({ product }) => {
           sizes="(max-width: 768px) 50vw, 240px"
           style={{ objectFit: 'contain' }}
         />
+        <button
+          type="button"
+          className={`${styles['av-fav-btn']} ${favoriteActive ? styles['av-fav-btn-active'] : ''} ${
+            isFavoritePulsing ? styles['av-fav-btn-pulse'] : ''
+          }`}
+          aria-pressed={favoriteActive}
+          aria-label={favoriteActive ? 'Убрать из избранного' : 'Добавить в избранное'}
+          onClick={handleToggleFavorite}
+        >
+          <svg
+            className={styles['av-fav-icon']}
+            viewBox="0 0 24 24"
+            role="presentation"
+            aria-hidden="true"
+          >
+            <path d="M12 20.7 10.55 19.4C5.4 14.8 2 11.7 2 8A5 5 0 0 1 7 3a4.5 4.5 0 0 1 5 3 4.5 4.5 0 0 1 5-3 5 5 0 0 1 5 5c0 3.7-3.4 6.8-8.55 11.4Z" />
+          </svg>
+        </button>
       </div>
       <div className={styles.content}>
         <h3>{product.name}</h3>

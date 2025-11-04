@@ -25,6 +25,12 @@
   overflow: hidden;
 }
 
+.card:hover .av-fav-btn,
+.card:focus-within .av-fav-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -138,5 +144,62 @@
   100% {
     opacity: 0;
     transform: translate3d(var(--av-cart-flight-x), var(--av-cart-flight-y), 0) scale(0.2);
+  }
+}
+
+.av-fav-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 22px rgba(26, 26, 26, 0.08);
+}
+
+.av-fav-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.av-fav-btn-active {
+  background: rgba(226, 0, 122, 0.12);
+}
+
+.av-fav-btn-active .av-fav-icon {
+  fill: var(--color-primary);
+  stroke: var(--color-primary);
+}
+
+.av-fav-icon {
+  width: 22px;
+  height: 22px;
+  fill: transparent;
+  stroke: var(--color-text);
+  stroke-width: 1.8;
+  transition: fill 0.2s ease, stroke 0.2s ease, transform 0.2s ease;
+}
+
+.av-fav-btn-pulse .av-fav-icon {
+  animation: av-fav-pop 0.22s ease;
+}
+
+@keyframes av-fav-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  55% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
   }
 }
