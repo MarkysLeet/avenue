@@ -118,6 +118,35 @@
   box-shadow: 0 0 0 3px rgba(226, 0, 122, 0.12);
 }
 
+.av-auth-note {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+
+.av-auth-note > * {
+  vertical-align: middle;
+}
+
+.av-auth-link {
+  color: var(--color-primary);
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.av-auth-link:hover,
+.av-auth-link:focus-visible {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
 .submitButton {
   margin-top: 12px;
   padding: 12px;

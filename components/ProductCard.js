@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
+import { createPortal } from 'react-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -10,7 +11,7 @@ import styles from '../styles/ProductCard.module.css';
 
 const ProductCard = ({ product }) => {
   const router = useRouter();
-  const { addToCart } = useCart();
+  const { items, addToCart, removeFromCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
@@ -24,11 +25,16 @@ const ProductCard = ({ product }) => {
   const frameRef = useRef(null);
   const favoriteTimerRef = useRef(null);
   const deniedTimerRef = useRef(null);
+  const isMountedRef = useRef(true);
+  const [isClient, setIsClient] = useState(false);
 
   const favoriteActive = isAuthenticated && isFavorite(product.id);
+  const inCart = items.some((item) => item.id === product.id);
 
   useEffect(() => {
+    setIsClient(true);
     return () => {
+      isMountedRef.current = false;
       if (buttonTimerRef.current) {
         clearTimeout(buttonTimerRef.current);
       }
@@ -70,6 +76,8 @@ const ProductCard = ({ product }) => {
 
     const buttonRect = buttonRef.current.getBoundingClientRect();
     const cartRect = cartTarget.getBoundingClientRect();
+    const scrollX = window.scrollX || window.pageXOffset || 0;
+    const scrollY = window.scrollY || window.pageYOffset || 0;
 
     const startX = buttonRect.left + buttonRect.width / 2;
     const startY = buttonRect.top + buttonRect.height / 2;
@@ -78,8 +86,8 @@ const ProductCard = ({ product }) => {
 
     const flightData = {
       key: Date.now(),
-      startX,
-      startY,
+      left: startX + scrollX,
+      top: startY + scrollY,
       deltaX: endX - startX,
       deltaY: endY - startY
     };
@@ -96,15 +104,51 @@ const ProductCard = ({ product }) => {
     setFlight(null);
 
     frameRef.current = window.requestAnimationFrame(() => {
+      if (!isMountedRef.current) {
+        return;
+      }
       setFlight(flightData);
       frameRef.current = null;
       flightTimerRef.current = setTimeout(() => {
-        setFlight(null);
+        if (isMountedRef.current) {
+          setFlight(null);
+        }
       }, 450);
     });
   };
 
-  const handleAddToCart = () => {
+  useEffect(() => {
+    if (!flight) {
+      return undefined;
+    }
+
+    const handleResize = () => {
+      if (isMountedRef.current) {
+        setFlight(null);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [flight]);
+
+  const handleAddToCart = (event) => {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+
+    if (inCart) {
+      removeFromCart(product.id);
+      toast({
+        type: 'success',
+        message: `${product.name} удалён из корзины`
+      });
+      return;
+    }
+
     addToCart(product, 1);
     triggerButtonAnimation();
     triggerFlightAnimation();
@@ -190,14 +234,17 @@ const ProductCard = ({ product }) => {
             <button
               type="button"
               ref={buttonRef}
-              className={
-                isButtonAnimating
-                  ? `${styles.cartButton} ${styles['av-cart-button-pulse']}`
-                  : styles.cartButton
-              }
+              className={`${styles.cartButton} ${
+                inCart ? styles['av-in-cart'] : ''
+              } ${isButtonAnimating ? styles['av-cart-button-pulse'] : ''}`.trim()}
               onClick={handleAddToCart}
+              aria-label={
+                inCart
+                  ? `Удалить ${product.name} из корзины`
+                  : `Добавить ${product.name} в корзину`
+              }
             >
-              В корзину
+              {inCart ? 'В корзине' : 'В корзину'}
             </button>
             <Link href={`/products/${product.id}`} className={styles.more}>
               Подробнее
@@ -205,19 +252,22 @@ const ProductCard = ({ product }) => {
           </div>
         </div>
       </div>
-      {flight ? (
-        <span
-          key={flight.key}
-          className={`${styles['av-cart-flight']} ${styles['av-cart-flight-active']}`}
-          style={{
-            left: `${flight.startX}px`,
-            top: `${flight.startY}px`,
-            '--av-cart-flight-x': `${flight.deltaX}px`,
-            '--av-cart-flight-y': `${flight.deltaY}px`
-          }}
-          aria-hidden="true"
-        />
-      ) : null}
+      {isClient && flight
+        ? createPortal(
+            <span
+              key={flight.key}
+              className={`${styles['av-flyer']} ${styles['av-flyer-active']}`}
+              style={{
+                left: `${flight.left}px`,
+                top: `${flight.top}px`,
+                '--av-flyer-x': `${flight.deltaX}px`,
+                '--av-flyer-y': `${flight.deltaY}px`
+              }}
+              aria-hidden="true"
+            />,
+            document.body
+          )
+        : null}
     </div>
   );
 };

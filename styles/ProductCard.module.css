@@ -84,6 +84,22 @@
   transform: translateY(-2px);
 }
 
+.av-in-cart {
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  transform: scale(0.98);
+  transition: transform 0.12s ease, color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.av-in-cart:hover,
+.av-in-cart:focus-visible {
+  transform: scale(1);
+  box-shadow: 0 12px 24px rgba(226, 0, 122, 0.18);
+  outline: none;
+}
+
 .av-cart-button-pulse {
   animation: av-cart-button-pulse 0.28s ease;
   box-shadow: 0 0 0 10px rgba(226, 0, 122, 0.12);
@@ -117,23 +133,23 @@
   color: var(--color-primary);
 }
 
-.av-cart-flight {
+.av-flyer {
   position: fixed;
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, #ffffff 10%, rgba(226, 0, 122, 0.9));
-  box-shadow: 0 10px 18px rgba(226, 0, 122, 0.25);
+  background: radial-gradient(circle at 30% 30%, #ffffff 12%, rgba(226, 0, 122, 0.9));
+  box-shadow: 0 12px 22px rgba(226, 0, 122, 0.25);
   pointer-events: none;
-  z-index: 1000;
+  z-index: 1600;
   opacity: 0;
 }
 
-.av-cart-flight-active {
-  animation: av-cart-flight 0.45s ease-in-out forwards;
+.av-flyer-active {
+  animation: av-flyer-motion 0.45s ease-in-out forwards;
 }
 
-@keyframes av-cart-flight {
+@keyframes av-flyer-motion {
   0% {
     opacity: 0.75;
     transform: translate3d(0, 0, 0) scale(0.6);
@@ -143,7 +159,7 @@
   }
   100% {
     opacity: 0;
-    transform: translate3d(var(--av-cart-flight-x), var(--av-cart-flight-y), 0) scale(0.2);
+    transform: translate3d(var(--av-flyer-x), var(--av-flyer-y), 0) scale(0.25);
   }
 }
 

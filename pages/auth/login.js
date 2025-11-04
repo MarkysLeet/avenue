@@ -71,12 +71,12 @@ const LoginPage = () => {
               Войти
             </button>
           </form>
-          <div className={styles['av-switch-row']}>
-            <p className={styles['av-switch-hint']}>Нет аккаунта?</p>
-            <Link className={styles.switch} href="/auth/register">
+          <p className={styles['av-auth-note']}>
+            Нет аккаунта?
+            <Link className={styles['av-auth-link']} href="/auth/register">
               Зарегистрируйтесь
             </Link>
-          </div>
+          </p>
         </div>
       </section>
     </Layout>

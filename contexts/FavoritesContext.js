@@ -1,15 +1,16 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 const STORAGE_KEY = 'avenue-favorites';
 
 const FavoritesContext = createContext({
   favoriteIds: [],
-  toggleFavorite: () => {},
+  favorites: [],
+  toggleFavorite: () => false,
   isFavorite: () => false
 });
 
 export const FavoritesProvider = ({ children }) => {
-  const [favoriteIds, setFavoriteIds] = useState([]);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -21,7 +22,23 @@ export const FavoritesProvider = ({ children }) => {
       try {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed)) {
-          setFavoriteIds(parsed);
+          const baseTime = Date.now();
+          const normalized = parsed
+            .map((entry, index) => {
+              if (typeof entry === 'string') {
+                return { id: entry, addedAt: baseTime + index };
+              }
+              if (entry && typeof entry.id === 'string') {
+                const timestamp = Number(entry.addedAt);
+                return {
+                  id: entry.id,
+                  addedAt: Number.isFinite(timestamp) ? timestamp : baseTime + index
+                };
+              }
+              return null;
+            })
+            .filter(Boolean);
+          setFavorites(normalized);
         }
       } catch (error) {
         console.warn('Ошибка чтения избранного', error);
@@ -34,29 +51,36 @@ export const FavoritesProvider = ({ children }) => {
       return;
     }
 
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favoriteIds));
-  }, [favoriteIds]);
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites));
+  }, [favorites]);
 
-  const toggleFavorite = (productId) => {
+  const toggleFavorite = useCallback((productId) => {
     let nextState = false;
-    setFavoriteIds((prev) => {
-      if (prev.includes(productId)) {
+    setFavorites((prev) => {
+      const exists = prev.find((entry) => entry.id === productId);
+      if (exists) {
         nextState = false;
-        return prev.filter((id) => id !== productId);
+        return prev.filter((entry) => entry.id !== productId);
       }
+      const nextEntry = { id: productId, addedAt: Date.now() };
       nextState = true;
-      return [...prev, productId];
+      return [...prev, nextEntry];
     });
     return nextState;
-  };
+  }, []);
+
+  const favoriteIds = useMemo(() => favorites.map((entry) => entry.id), [favorites]);
+
+  const isFavorite = useCallback((productId) => favoriteIds.includes(productId), [favoriteIds]);
 
   const value = useMemo(
     () => ({
+      favorites,
       favoriteIds,
       toggleFavorite,
-      isFavorite: (productId) => favoriteIds.includes(productId)
+      isFavorite
     }),
-    [favoriteIds]
+    [favorites, favoriteIds, toggleFavorite, isFavorite]
   );
 
   return <FavoritesContext.Provider value={value}>{children}</FavoritesContext.Provider>;

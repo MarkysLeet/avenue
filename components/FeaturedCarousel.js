@@ -8,10 +8,22 @@ const FeaturedCarousel = ({ products }) => {
   const trackRef = useRef(null);
   const focusWithinRef = useRef(false);
   const scrollAnimationFrame = useRef(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndexState, setActiveIndexState] = useState(0);
+  const activeIndexRef = useRef(0);
+  const setActiveIndex = useCallback((value) => {
+    const base = activeIndexRef.current;
+    const next = typeof value === 'function' ? value(base) : value;
+    activeIndexRef.current = next;
+    setActiveIndexState(next);
+  }, []);
   const [isPaused, setIsPaused] = useState(false);
   const [slidesMeta, setSlidesMeta] = useState([]);
   const liveMessageRef = useRef(null);
+  const activeIndex = activeIndexState;
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndexState;
+  }, [activeIndexState]);
 
   const validProducts = useMemo(() => products.filter(Boolean), [products]);
 
@@ -50,7 +62,7 @@ const FeaturedCarousel = ({ products }) => {
       behavior: 'auto'
     });
     setActiveIndex(targetIndex);
-  }, [slidesMeta]);
+  }, [activeIndex, slidesMeta, setActiveIndex]);
 
   const goToIndex = useCallback(
     (index, { smooth = true } = {}) => {
@@ -70,7 +82,7 @@ const FeaturedCarousel = ({ products }) => {
       });
       setActiveIndex(normalized);
     },
-    [slidesMeta]
+    [slidesMeta, setActiveIndex]
   );
 
   useEffect(() => {
@@ -79,20 +91,20 @@ const FeaturedCarousel = ({ products }) => {
     }
 
     const timer = setInterval(() => {
-      setActiveIndex((prev) => {
-        const nextIndex = (prev + 1) % slidesMeta.length;
-        if (trackRef.current) {
-          trackRef.current.scrollTo({
-            left: slidesMeta[nextIndex].left,
-            behavior: 'smooth'
-          });
-        }
-        return nextIndex;
+      if (!trackRef.current || slidesMeta.length === 0) {
+        return;
+      }
+      const total = slidesMeta.length;
+      const nextIndex = (activeIndexRef.current + 1) % total;
+      trackRef.current.scrollTo({
+        left: slidesMeta[nextIndex].left,
+        behavior: 'smooth'
       });
+      setActiveIndex(nextIndex);
     }, AUTO_DELAY);
 
     return () => clearInterval(timer);
-  }, [isPaused, slidesMeta]);
+  }, [isPaused, slidesMeta, setActiveIndex]);
 
   const syncActiveIndex = useCallback(() => {
     if (!trackRef.current || slidesMeta.length === 0) {
@@ -112,7 +124,7 @@ const FeaturedCarousel = ({ products }) => {
     });
 
     setActiveIndex(closestIndex);
-  }, [slidesMeta]);
+  }, [setActiveIndex, slidesMeta]);
 
   const handleScroll = () => {
     if (scrollAnimationFrame.current) {

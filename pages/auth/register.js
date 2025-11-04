@@ -204,12 +204,12 @@ const RegisterPage = () => {
               Зарегистрироваться
             </button>
           </form>
-          <div className={styles['av-switch-row']}>
-            <p className={styles['av-switch-hint']}>Уже есть аккаунт?</p>
-            <Link className={styles.switch} href="/auth/login">
+          <p className={styles['av-auth-note']}>
+            Уже есть аккаунт?
+            <Link className={styles['av-auth-link']} href="/auth/login">
               Войдите
             </Link>
-          </div>
+          </p>
         </div>
       </section>
     </Layout>
