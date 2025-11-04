@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Layout from '../components/Layout';
 import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import styles from '../styles/AuthPage.module.css';
 
 const AuthPage = () => {
   const { register, login } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
   const [mode, setMode] = useState('login');
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
@@ -29,10 +31,16 @@ const AuthPage = () => {
     setMessage('');
 
     try {
+      const { returnTo } = router.query;
+      const candidate = typeof returnTo === 'string' ? returnTo : '/';
+      const targetRoute =
+        candidate.startsWith('/') && !candidate.startsWith('//') ? candidate : '/';
+
       if (mode === 'login') {
         login({ email: form.email, password: form.password });
         setMessage('Вы успешно вошли!');
-        router.replace('/');
+        toast({ type: 'success', message: 'Вы успешно вошли' });
+        router.replace(targetRoute);
       } else {
         if (!form.name) {
           setError('Введите имя для регистрации');
@@ -40,10 +48,12 @@ const AuthPage = () => {
         }
         register({ name: form.name, email: form.email, password: form.password });
         setMessage('Регистрация прошла успешно!');
-        router.replace('/');
+        toast({ type: 'success', message: 'Регистрация прошла успешно' });
+        router.replace(targetRoute);
       }
     } catch (authError) {
       setError(authError.message);
+      toast({ type: 'error', message: authError.message });
     }
   };
 

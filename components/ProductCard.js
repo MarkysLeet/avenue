@@ -1,23 +1,31 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useAuth } from '../contexts/AuthContext';
+import { useToast } from '../contexts/ToastContext';
 import styles from '../styles/ProductCard.module.css';
 
 const ProductCard = ({ product }) => {
+  const router = useRouter();
   const { addToCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { isAuthenticated } = useAuth();
+  const { toast } = useToast();
   const buttonRef = useRef(null);
   const [isButtonAnimating, setIsButtonAnimating] = useState(false);
   const [flight, setFlight] = useState(null);
   const [isFavoritePulsing, setIsFavoritePulsing] = useState(false);
+  const [isFavoriteDenied, setIsFavoriteDenied] = useState(false);
   const buttonTimerRef = useRef(null);
   const flightTimerRef = useRef(null);
   const frameRef = useRef(null);
   const favoriteTimerRef = useRef(null);
+  const deniedTimerRef = useRef(null);
 
-  const favoriteActive = isFavorite(product.id);
+  const favoriteActive = isAuthenticated && isFavorite(product.id);
 
   useEffect(() => {
     return () => {
@@ -33,6 +41,9 @@ const ProductCard = ({ product }) => {
       }
       if (favoriteTimerRef.current) {
         clearTimeout(favoriteTimerRef.current);
+      }
+      if (deniedTimerRef.current) {
+        clearTimeout(deniedTimerRef.current);
       }
     };
   }, []);
@@ -97,12 +108,35 @@ const ProductCard = ({ product }) => {
     addToCart(product, 1);
     triggerButtonAnimation();
     triggerFlightAnimation();
+    toast({
+      type: 'success',
+      message: `${product.name} добавлен в корзину`
+    });
   };
 
   const handleToggleFavorite = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    toggleFavorite(product.id);
+    if (!isAuthenticated) {
+      setIsFavoriteDenied(true);
+      if (deniedTimerRef.current) {
+        clearTimeout(deniedTimerRef.current);
+      }
+      deniedTimerRef.current = setTimeout(() => {
+        setIsFavoriteDenied(false);
+      }, 320);
+      toast({
+        type: 'warning',
+        message: 'Войдите в аккаунт, чтобы добавлять в избранное',
+        actionLabel: 'Войти',
+        onAction: () => {
+          router.push('/auth?returnTo=/account?tab=favorites');
+        }
+      });
+      return;
+    }
+
+    const willBeFavorite = toggleFavorite(product.id);
     if (favoriteTimerRef.current) {
       clearTimeout(favoriteTimerRef.current);
     }
@@ -110,6 +144,10 @@ const ProductCard = ({ product }) => {
     favoriteTimerRef.current = setTimeout(() => {
       setIsFavoritePulsing(false);
     }, 220);
+    toast({
+      type: 'success',
+      message: willBeFavorite ? 'Товар добавлен в избранное' : 'Товар удалён из избранного'
+    });
   };
 
   return (
@@ -126,6 +164,8 @@ const ProductCard = ({ product }) => {
           type="button"
           className={`${styles['av-fav-btn']} ${favoriteActive ? styles['av-fav-btn-active'] : ''} ${
             isFavoritePulsing ? styles['av-fav-btn-pulse'] : ''
+          } ${
+            isFavoriteDenied ? styles['av-fav-btn-shake'] : ''
           }`}
           aria-pressed={favoriteActive}
           aria-label={favoriteActive ? 'Убрать из избранного' : 'Добавить в избранное'}

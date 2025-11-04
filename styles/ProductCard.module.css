@@ -192,6 +192,25 @@
   animation: av-fav-pop 0.22s ease;
 }
 
+.av-fav-btn-shake {
+  animation: av-fav-shake 0.32s ease;
+}
+
+@keyframes av-fav-shake {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-10px) rotate(-8deg);
+  }
+  60% {
+    transform: translateY(-10px) rotate(6deg);
+  }
+  100% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+}
+
 @keyframes av-fav-pop {
   0% {
     transform: scale(0.92);

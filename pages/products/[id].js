@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Layout from '../../components/Layout';
 import { getProductById } from '../../data/products';
 import { useCart } from '../../contexts/CartContext';
+import { useToast } from '../../contexts/ToastContext';
 import styles from '../../styles/ProductPage.module.css';
 
 const ProductPage = () => {
@@ -10,6 +11,7 @@ const ProductPage = () => {
   const { id } = router.query;
   const product = id ? getProductById(id) : null;
   const { addToCart } = useCart();
+  const { toast } = useToast();
 
   if (!product) {
     return (
@@ -23,6 +25,7 @@ const ProductPage = () => {
 
   const handleAdd = () => {
     addToCart(product, 1);
+    toast({ type: 'success', message: `${product.name} добавлен в корзину` });
     router.push('/cart');
   };
 

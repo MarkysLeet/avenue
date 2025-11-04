@@ -38,12 +38,16 @@ export const FavoritesProvider = ({ children }) => {
   }, [favoriteIds]);
 
   const toggleFavorite = (productId) => {
+    let nextState = false;
     setFavoriteIds((prev) => {
       if (prev.includes(productId)) {
+        nextState = false;
         return prev.filter((id) => id !== productId);
       }
+      nextState = true;
       return [...prev, productId];
     });
+    return nextState;
   };
 
   const value = useMemo(

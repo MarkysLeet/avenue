@@ -63,6 +63,162 @@
   box-shadow: 0 26px 48px rgba(26, 26, 26, 0.08);
 }
 
+.av-account-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.av-account-card {
+  position: relative;
+  border-radius: 24px;
+  border: 1px solid rgba(231, 223, 228, 0.8);
+  background: linear-gradient(145deg, rgba(255, 248, 251, 0.85), #ffffff);
+  box-shadow: 0 24px 48px rgba(26, 26, 26, 0.08);
+  padding: 28px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.av-account-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 36px 64px rgba(26, 26, 26, 0.12);
+}
+
+.av-account-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.av-account-card-header h2 {
+  margin: 0 0 6px;
+  font-size: 1.4rem;
+}
+
+.av-account-card-header p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.av-edit-btn {
+  border: 1px solid rgba(26, 26, 26, 0.16);
+  background: #ffffff;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.av-account-card:hover .av-edit-btn,
+.av-account-card:focus-within .av-edit-btn,
+.av-edit-btn:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.av-edit-btn:hover {
+  box-shadow: 0 12px 24px rgba(26, 26, 26, 0.12);
+}
+
+.av-account-card-body {
+  animation: av-account-fade 0.18s ease;
+}
+
+.av-account-card-body-view {
+  animation: av-account-fade 0.18s ease;
+}
+
+.av-account-card-body-edit {
+  animation: av-account-zoom 0.2s ease;
+}
+
+@keyframes av-account-fade {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes av-account-zoom {
+  0% {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.av-account-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.av-account-info-item {
+  padding: 18px 20px;
+  border-radius: 18px;
+  border: 1px solid rgba(231, 223, 228, 0.9);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.av-account-info-label {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-muted);
+}
+
+.av-account-info-value {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.av-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+.av-account-cancel {
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1px solid rgba(26, 26, 26, 0.16);
+  background: transparent;
+  font-weight: 600;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.av-account-cancel:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
 .av-account-form {
   display: grid;
   gap: 24px;

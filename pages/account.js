@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 import ProductCard from '../components/ProductCard';
 import { useAuth } from '../contexts/AuthContext';
 import { useCart } from '../contexts/CartContext';
 import { useFavorites } from '../contexts/FavoritesContext';
+import { useToast } from '../contexts/ToastContext';
 import { products } from '../data/products';
 import styles from '../styles/AccountPage.module.css';
 
@@ -18,6 +20,7 @@ const tabs = [
 
 const PROFILE_STORAGE_KEY = 'avenue-account-profile';
 const ADDRESS_STORAGE_KEY = 'avenue-account-address';
+const SECURITY_STORAGE_KEY = 'avenue-account-security';
 
 const defaultProfile = {
   firstName: '',
@@ -32,6 +35,18 @@ const defaultAddress = {
   street: '',
   postalCode: ''
 };
+
+const defaultSecurity = {
+  email: '',
+  phone: '',
+  isPasswordSet: false
+};
+
+const buildSecurityDraft = (base, profile) => ({
+  email: base.email || profile.email || '',
+  phone: base.phone || profile.phone || '',
+  password: ''
+});
 
 const mockOrders = [
   {
@@ -74,33 +89,40 @@ const statusVariants = {
 };
 
 const AccountPage = () => {
-  const { user } = useAuth();
+  const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
   const { addToCart } = useCart();
   const { favoriteIds } = useFavorites();
+  const { toast } = useToast();
   const [activeTab, setActiveTab] = useState('profile');
   const [profile, setProfile] = useState(defaultProfile);
+  const [profileDraft, setProfileDraft] = useState(defaultProfile);
+  const [isProfileEditing, setIsProfileEditing] = useState(false);
   const [address, setAddress] = useState(defaultAddress);
-  const [profileSaved, setProfileSaved] = useState(false);
-  const [addressSaved, setAddressSaved] = useState(false);
-  const [securitySaved, setSecuritySaved] = useState(false);
-  const [security, setSecurity] = useState({ email: '', phone: '', password: '' });
+  const [addressDraft, setAddressDraft] = useState(defaultAddress);
+  const [isAddressEditing, setIsAddressEditing] = useState(false);
+  const [security, setSecurity] = useState(defaultSecurity);
+  const [securityDraft, setSecurityDraft] = useState(buildSecurityDraft(defaultSecurity, defaultProfile));
+  const [isSecurityEditing, setIsSecurityEditing] = useState(false);
   const [reorderedOrder, setReorderedOrder] = useState(null);
   const tabRefs = useRef([]);
-  const profileTimerRef = useRef(null);
-  const addressTimerRef = useRef(null);
-  const securityTimerRef = useRef(null);
   const reorderTimerRef = useRef(null);
+  const guardRef = useRef(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
     }
 
+    let nextProfile = { ...defaultProfile };
+    let nextAddress = { ...defaultAddress };
+    let nextSecurity = { ...defaultSecurity };
+
     const storedProfile = window.localStorage.getItem(PROFILE_STORAGE_KEY);
     if (storedProfile) {
       try {
         const parsed = JSON.parse(storedProfile);
-        setProfile((prev) => ({ ...prev, ...parsed }));
+        nextProfile = { ...defaultProfile, ...parsed };
       } catch (error) {
         console.warn('Ошибка чтения профиля', error);
       }
@@ -110,35 +132,64 @@ const AccountPage = () => {
     if (storedAddress) {
       try {
         const parsed = JSON.parse(storedAddress);
-        setAddress((prev) => ({ ...prev, ...parsed }));
+        nextAddress = { ...defaultAddress, ...parsed };
       } catch (error) {
         console.warn('Ошибка чтения адреса', error);
       }
     }
+
+    const storedSecurity = window.localStorage.getItem(SECURITY_STORAGE_KEY);
+    if (storedSecurity) {
+      try {
+        const parsed = JSON.parse(storedSecurity);
+        nextSecurity = { ...defaultSecurity, ...parsed };
+      } catch (error) {
+        console.warn('Ошибка чтения настроек безопасности', error);
+      }
+    }
+
+    setProfile(nextProfile);
+    setProfileDraft(nextProfile);
+    setAddress(nextAddress);
+    setAddressDraft(nextAddress);
+    setSecurity(nextSecurity);
+    setSecurityDraft(buildSecurityDraft(nextSecurity, nextProfile));
   }, []);
 
   useEffect(() => {
     if (user?.email) {
-      setProfile((prev) => ({ ...prev, email: user.email }));
+      setProfile((prev) => ({ ...prev, email: prev.email || user.email }));
+      setProfileDraft((prev) => ({ ...prev, email: prev.email || user.email }));
+      setSecurity((prev) => ({ ...prev, email: prev.email || user.email }));
+      setSecurityDraft((prev) => ({ ...prev, email: prev.email || user.email }));
     }
   }, [user?.email]);
 
   useEffect(() => {
-    return () => {
-      if (profileTimerRef.current) {
-        clearTimeout(profileTimerRef.current);
-      }
-      if (addressTimerRef.current) {
-        clearTimeout(addressTimerRef.current);
-      }
-      if (securityTimerRef.current) {
-        clearTimeout(securityTimerRef.current);
-      }
-      if (reorderTimerRef.current) {
-        clearTimeout(reorderTimerRef.current);
-      }
-    };
+    if (user?.name) {
+      setProfile((prev) => ({ ...prev, firstName: prev.firstName || user.name }));
+      setProfileDraft((prev) => ({ ...prev, firstName: prev.firstName || user.name }));
+    }
+  }, [user?.name]);
+
+  useEffect(() => () => {
+    if (reorderTimerRef.current) {
+      clearTimeout(reorderTimerRef.current);
+    }
   }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated && !guardRef.current) {
+      guardRef.current = true;
+      toast({
+        type: 'warning',
+        message: 'Требуется авторизация для доступа к личному кабинету',
+        actionLabel: 'Войти',
+        onAction: () => router.push('/auth?returnTo=/account')
+      });
+      router.replace('/auth?returnTo=/account');
+    }
+  }, [isAuthenticated, router, toast]);
 
   const favoriteProducts = useMemo(
     () => products.filter((product) => favoriteIds.includes(product.id)),
@@ -159,58 +210,89 @@ const AccountPage = () => {
     }
   };
 
-  const handleProfileChange = (event) => {
-    const { name, value } = event.target;
-    setProfile((prev) => ({ ...prev, [name]: value }));
+  const beginProfileEdit = () => {
+    setProfileDraft(profile);
+    setIsProfileEditing(true);
   };
 
-  const handleAddressChange = (event) => {
-    const { name, value } = event.target;
-    setAddress((prev) => ({ ...prev, [name]: value }));
+  const cancelProfileEdit = () => {
+    setProfileDraft(profile);
+    setIsProfileEditing(false);
   };
 
-  const handleSecurityChange = (event) => {
+  const handleProfileDraftChange = (event) => {
     const { name, value } = event.target;
-    setSecurity((prev) => ({ ...prev, [name]: value }));
+    setProfileDraft((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleProfileSubmit = (event) => {
     event.preventDefault();
+    const nextProfile = { ...profileDraft };
+    setProfile(nextProfile);
+    setProfileDraft(nextProfile);
+    setIsProfileEditing(false);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(profile));
+      window.localStorage.setItem(PROFILE_STORAGE_KEY, JSON.stringify(nextProfile));
     }
-    setProfileSaved(true);
-    if (profileTimerRef.current) {
-      clearTimeout(profileTimerRef.current);
-    }
-    profileTimerRef.current = setTimeout(() => {
-      setProfileSaved(false);
-    }, 2400);
+    toast({ type: 'success', message: 'Профиль обновлён' });
+  };
+
+  const beginAddressEdit = () => {
+    setAddressDraft(address);
+    setIsAddressEditing(true);
+  };
+
+  const cancelAddressEdit = () => {
+    setAddressDraft(address);
+    setIsAddressEditing(false);
+  };
+
+  const handleAddressDraftChange = (event) => {
+    const { name, value } = event.target;
+    setAddressDraft((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleAddressSubmit = (event) => {
     event.preventDefault();
+    const nextAddress = { ...addressDraft };
+    setAddress(nextAddress);
+    setAddressDraft(nextAddress);
+    setIsAddressEditing(false);
     if (typeof window !== 'undefined') {
-      window.localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(address));
+      window.localStorage.setItem(ADDRESS_STORAGE_KEY, JSON.stringify(nextAddress));
     }
-    setAddressSaved(true);
-    if (addressTimerRef.current) {
-      clearTimeout(addressTimerRef.current);
-    }
-    addressTimerRef.current = setTimeout(() => {
-      setAddressSaved(false);
-    }, 2400);
+    toast({ type: 'success', message: 'Адрес сохранён' });
+  };
+
+  const beginSecurityEdit = () => {
+    setSecurityDraft(buildSecurityDraft(security, profile));
+    setIsSecurityEditing(true);
+  };
+
+  const cancelSecurityEdit = () => {
+    setSecurityDraft(buildSecurityDraft(security, profile));
+    setIsSecurityEditing(false);
+  };
+
+  const handleSecurityDraftChange = (event) => {
+    const { name, value } = event.target;
+    setSecurityDraft((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSecuritySubmit = (event) => {
     event.preventDefault();
-    setSecuritySaved(true);
-    if (securityTimerRef.current) {
-      clearTimeout(securityTimerRef.current);
+    const nextSecurity = {
+      email: securityDraft.email,
+      phone: securityDraft.phone,
+      isPasswordSet: securityDraft.password ? true : security.isPasswordSet
+    };
+    setSecurity(nextSecurity);
+    if (typeof window !== 'undefined') {
+      window.localStorage.setItem(SECURITY_STORAGE_KEY, JSON.stringify(nextSecurity));
     }
-    securityTimerRef.current = setTimeout(() => {
-      setSecuritySaved(false);
-    }, 2400);
+    setSecurityDraft(buildSecurityDraft(nextSecurity, profile));
+    setIsSecurityEditing(false);
+    toast({ type: 'success', message: 'Настройки безопасности обновлены' });
   };
 
   const handleReorder = (order) => {
@@ -227,230 +309,432 @@ const AccountPage = () => {
     reorderTimerRef.current = setTimeout(() => {
       setReorderedOrder(null);
     }, 900);
+    toast({ type: 'success', message: `Товары из заказа ${order.orderNo} добавлены в корзину` });
   };
 
   const renderProfileTab = () => (
-    <form className={styles['av-account-form']} onSubmit={handleProfileSubmit}>
-      <div className={styles['av-account-grid']}>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-first-name">Имя</label>
-          <input
-            id="account-first-name"
-            name="firstName"
-            value={profile.firstName}
-            onChange={handleProfileChange}
-            placeholder="Анна"
-            autoComplete="given-name"
-          />
+    <div className={styles['av-account-stack']}>
+      <section
+        className={styles['av-account-card']}
+        data-mode={isProfileEditing ? 'edit' : 'view'}
+      >
+        <header className={styles['av-account-card-header']}>
+          <div>
+            <h2>Основная информация</h2>
+            <p>Актуальные данные для приветствий и персонализации рекомендаций.</p>
+          </div>
+          {!isProfileEditing ? (
+            <button type="button" className={styles['av-edit-btn']} onClick={beginProfileEdit}>
+              Изменить
+            </button>
+          ) : null}
+        </header>
+        <div
+          className={`${styles['av-account-card-body']} ${
+            isProfileEditing ? styles['av-account-card-body-edit'] : styles['av-account-card-body-view']
+          }`}
+        >
+          {isProfileEditing ? (
+            <form className={styles['av-account-form']} onSubmit={handleProfileSubmit}>
+              <div className={styles['av-account-grid']}>
+                <label className={styles['av-account-field']} htmlFor="account-first-name">
+                  <span>Имя</span>
+                  <input
+                    id="account-first-name"
+                    name="firstName"
+                    value={profileDraft.firstName}
+                    onChange={handleProfileDraftChange}
+                    placeholder="Анна"
+                    autoComplete="given-name"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-last-name">
+                  <span>Фамилия</span>
+                  <input
+                    id="account-last-name"
+                    name="lastName"
+                    value={profileDraft.lastName}
+                    onChange={handleProfileDraftChange}
+                    placeholder="Иванова"
+                    autoComplete="family-name"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-email">
+                  <span>Email</span>
+                  <input
+                    id="account-email"
+                    name="email"
+                    type="email"
+                    value={profileDraft.email}
+                    onChange={handleProfileDraftChange}
+                    autoComplete="email"
+                    disabled
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-phone">
+                  <span>Телефон</span>
+                  <input
+                    id="account-phone"
+                    name="phone"
+                    type="tel"
+                    value={profileDraft.phone}
+                    onChange={handleProfileDraftChange}
+                    placeholder="+7 (___) ___-__-__"
+                    autoComplete="tel"
+                  />
+                </label>
+              </div>
+              <div className={styles['av-account-actions']}>
+                <button type="submit" className={styles['av-account-save']}>
+                  Сохранить
+                </button>
+                <button
+                  type="button"
+                  className={styles['av-account-cancel']}
+                  onClick={cancelProfileEdit}
+                >
+                  Отмена
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className={styles['av-account-info-grid']}>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Имя</span>
+                <span className={styles['av-account-info-value']}>
+                  {profile.firstName || 'Не указано'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Фамилия</span>
+                <span className={styles['av-account-info-value']}>
+                  {profile.lastName || 'Не указано'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Email</span>
+                <span className={styles['av-account-info-value']}>
+                  {profile.email || 'Не указан'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Телефон</span>
+                <span className={styles['av-account-info-value']}>
+                  {profile.phone || 'Не указан'}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-last-name">Фамилия</label>
-          <input
-            id="account-last-name"
-            name="lastName"
-            value={profile.lastName}
-            onChange={handleProfileChange}
-            placeholder="Иванова"
-            autoComplete="family-name"
-          />
-        </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-email">Email</label>
-          <input
-            id="account-email"
-            name="email"
-            type="email"
-            value={profile.email}
-            onChange={handleProfileChange}
-            placeholder="you@example.com"
-            autoComplete="email"
-            disabled
-          />
-        </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-phone">Телефон</label>
-          <input
-            id="account-phone"
-            name="phone"
-            type="tel"
-            value={profile.phone}
-            onChange={handleProfileChange}
-            placeholder="+7 (___) ___-__-__"
-            autoComplete="tel"
-          />
-        </div>
-      </div>
-      <button type="submit" className={styles['av-account-save']}>
-        Сохранить
-      </button>
-      {profileSaved ? <p className={styles['av-account-feedback']}>Профиль обновлён</p> : null}
-    </form>
+      </section>
+    </div>
   );
 
   const renderAddressTab = () => (
-    <form className={styles['av-account-form']} onSubmit={handleAddressSubmit}>
-      <div className={`${styles['av-account-grid']} ${styles['av-account-grid-single']}`}>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-country">Страна</label>
-          <input
-            id="account-country"
-            name="country"
-            value={address.country}
-            onChange={handleAddressChange}
-            placeholder="Россия"
-            autoComplete="country-name"
-          />
+    <div className={styles['av-account-stack']}>
+      <section
+        className={styles['av-account-card']}
+        data-mode={isAddressEditing ? 'edit' : 'view'}
+      >
+        <header className={styles['av-account-card-header']}>
+          <div>
+            <h2>Адрес доставки</h2>
+            <p>Используется для расчёта доставки и оформления заказа.</p>
+          </div>
+          {!isAddressEditing ? (
+            <button type="button" className={styles['av-edit-btn']} onClick={beginAddressEdit}>
+              Изменить
+            </button>
+          ) : null}
+        </header>
+        <div
+          className={`${styles['av-account-card-body']} ${
+            isAddressEditing ? styles['av-account-card-body-edit'] : styles['av-account-card-body-view']
+          }`}
+        >
+          {isAddressEditing ? (
+            <form className={styles['av-account-form']} onSubmit={handleAddressSubmit}>
+              <div className={`${styles['av-account-grid']} ${styles['av-account-grid-single']}`}>
+                <label className={styles['av-account-field']} htmlFor="account-country">
+                  <span>Страна</span>
+                  <input
+                    id="account-country"
+                    name="country"
+                    value={addressDraft.country}
+                    onChange={handleAddressDraftChange}
+                    placeholder="Россия"
+                    autoComplete="country-name"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-city">
+                  <span>Город</span>
+                  <input
+                    id="account-city"
+                    name="city"
+                    value={addressDraft.city}
+                    onChange={handleAddressDraftChange}
+                    placeholder="Москва"
+                    autoComplete="address-level2"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-street">
+                  <span>Улица, дом, квартира</span>
+                  <input
+                    id="account-street"
+                    name="street"
+                    value={addressDraft.street}
+                    onChange={handleAddressDraftChange}
+                    placeholder="ул. Пушкинская, д. 10, кв. 5"
+                    autoComplete="street-address"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-postal">
+                  <span>Индекс</span>
+                  <input
+                    id="account-postal"
+                    name="postalCode"
+                    value={addressDraft.postalCode}
+                    onChange={handleAddressDraftChange}
+                    placeholder="123456"
+                    autoComplete="postal-code"
+                  />
+                </label>
+              </div>
+              <div className={styles['av-account-actions']}>
+                <button type="submit" className={styles['av-account-save']}>
+                  Сохранить
+                </button>
+                <button
+                  type="button"
+                  className={styles['av-account-cancel']}
+                  onClick={cancelAddressEdit}
+                >
+                  Отмена
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className={styles['av-account-info-grid']}>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Страна</span>
+                <span className={styles['av-account-info-value']}>
+                  {address.country || 'Не указана'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Город</span>
+                <span className={styles['av-account-info-value']}>
+                  {address.city || 'Не указан'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Улица</span>
+                <span className={styles['av-account-info-value']}>
+                  {address.street || 'Не указана'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Индекс</span>
+                <span className={styles['av-account-info-value']}>
+                  {address.postalCode || 'Не указан'}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-city">Город</label>
-          <input
-            id="account-city"
-            name="city"
-            value={address.city}
-            onChange={handleAddressChange}
-            placeholder="Москва"
-            autoComplete="address-level2"
-          />
-        </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-street">Улица, дом, квартира</label>
-          <input
-            id="account-street"
-            name="street"
-            value={address.street}
-            onChange={handleAddressChange}
-            placeholder="ул. Пушкинская, д. 10, кв. 5"
-            autoComplete="street-address"
-          />
-        </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-postal">Индекс</label>
-          <input
-            id="account-postal"
-            name="postalCode"
-            value={address.postalCode}
-            onChange={handleAddressChange}
-            placeholder="123456"
-            autoComplete="postal-code"
-          />
-        </div>
-      </div>
-      <button type="submit" className={styles['av-account-save']}>
-        Сохранить
-      </button>
-      {addressSaved ? <p className={styles['av-account-feedback']}>Адрес сохранён</p> : null}
-    </form>
+      </section>
+    </div>
   );
 
   const renderOrdersTab = () => (
-    <div>
-      <table className={styles['av-account-orders']}>
-        <thead>
-          <tr>
-            <th>Номер заказа</th>
-            <th>Дата</th>
-            <th>Статус</th>
-            <th>Сумма</th>
-            <th aria-label="Действия" />
-          </tr>
-        </thead>
-        <tbody>
-          {mockOrders.map((order) => {
-            const variant = statusVariants[order.status] || 'processing';
-            const statusClass = `${styles['av-account-status']} ${styles[`av-account-status-${variant}`] || ''}`;
-            return (
-              <tr
-                key={order.orderNo}
-                className={`${styles['av-account-order-row']} ${
-                  reorderedOrder === order.orderNo ? styles['av-account-order-row-active'] : ''
-                }`}
-              >
-                <td>{order.orderNo}</td>
-                <td>{order.date}</td>
-                <td>
-                  <span className={statusClass}>{order.status}</span>
-                </td>
-                <td>{order.total.toLocaleString()} ₽</td>
-                <td>
-                  <button
-                    type="button"
-                    className={styles['av-account-order-action']}
-                    onClick={() => handleReorder(order)}
-                  >
-                    Повторить заказ
-                  </button>
-                </td>
+    <div className={styles['av-account-stack']}>
+      <section className={styles['av-account-card']} data-mode="view">
+        <header className={styles['av-account-card-header']}>
+          <div>
+            <h2>История покупок</h2>
+            <p>Просматривайте завершённые заказы и повторяйте их в один клик.</p>
+          </div>
+        </header>
+        <div className={`${styles['av-account-card-body']} ${styles['av-account-card-body-view']}`}>
+          <table className={styles['av-account-orders']}>
+            <thead>
+              <tr>
+                <th>Номер заказа</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th>Сумма</th>
+                <th aria-label="Действия" />
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {mockOrders.map((order) => {
+                const variant = statusVariants[order.status] || 'processing';
+                const statusClass = `${styles['av-account-status']} ${
+                  styles[`av-account-status-${variant}`] || ''
+                }`;
+                return (
+                  <tr
+                    key={order.orderNo}
+                    className={`${styles['av-account-order-row']} ${
+                      reorderedOrder === order.orderNo ? styles['av-account-order-row-active'] : ''
+                    }`}
+                  >
+                    <td>{order.orderNo}</td>
+                    <td>{order.date}</td>
+                    <td>
+                      <span className={statusClass}>{order.status}</span>
+                    </td>
+                    <td>{order.total.toLocaleString()} ₽</td>
+                    <td>
+                      <button
+                        type="button"
+                        className={styles['av-account-order-action']}
+                        onClick={() => handleReorder(order)}
+                      >
+                        Повторить заказ
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      </section>
     </div>
   );
 
   const renderSecurityTab = () => (
-    <form className={styles['av-account-form']} onSubmit={handleSecuritySubmit}>
-      <div className={styles['av-account-grid']}>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-security-email">Новый email</label>
-          <input
-            id="account-security-email"
-            name="email"
-            type="email"
-            value={security.email}
-            onChange={handleSecurityChange}
-            placeholder="new@example.com"
-            autoComplete="email"
-          />
+    <div className={styles['av-account-stack']}>
+      <section
+        className={styles['av-account-card']}
+        data-mode={isSecurityEditing ? 'edit' : 'view'}
+      >
+        <header className={styles['av-account-card-header']}>
+          <div>
+            <h2>Безопасность</h2>
+            <p>Обновляйте контактные данные для подтверждений и управляйте паролем.</p>
+          </div>
+          {!isSecurityEditing ? (
+            <button type="button" className={styles['av-edit-btn']} onClick={beginSecurityEdit}>
+              Изменить
+            </button>
+          ) : null}
+        </header>
+        <div
+          className={`${styles['av-account-card-body']} ${
+            isSecurityEditing ? styles['av-account-card-body-edit'] : styles['av-account-card-body-view']
+          }`}
+        >
+          {isSecurityEditing ? (
+            <form className={styles['av-account-form']} onSubmit={handleSecuritySubmit}>
+              <div className={styles['av-account-grid']}>
+                <label className={styles['av-account-field']} htmlFor="account-security-email">
+                  <span>Новый email</span>
+                  <input
+                    id="account-security-email"
+                    name="email"
+                    type="email"
+                    value={securityDraft.email}
+                    onChange={handleSecurityDraftChange}
+                    placeholder="new@example.com"
+                    autoComplete="email"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-security-phone">
+                  <span>Новый телефон</span>
+                  <input
+                    id="account-security-phone"
+                    name="phone"
+                    type="tel"
+                    value={securityDraft.phone}
+                    onChange={handleSecurityDraftChange}
+                    placeholder="+7 (___) ___-__-__"
+                    autoComplete="tel"
+                  />
+                </label>
+                <label className={styles['av-account-field']} htmlFor="account-security-password">
+                  <span>Пароль</span>
+                  <input
+                    id="account-security-password"
+                    name="password"
+                    type="password"
+                    value={securityDraft.password}
+                    onChange={handleSecurityDraftChange}
+                    placeholder="Новый пароль"
+                    autoComplete="new-password"
+                  />
+                </label>
+              </div>
+              <div className={styles['av-account-actions']}>
+                <button type="submit" className={styles['av-account-save']}>
+                  Сохранить
+                </button>
+                <button
+                  type="button"
+                  className={styles['av-account-cancel']}
+                  onClick={cancelSecurityEdit}
+                >
+                  Отмена
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className={styles['av-account-info-grid']}>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Email для уведомлений</span>
+                <span className={styles['av-account-info-value']}>
+                  {security.email || profile.email || 'Не указан'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Телефон</span>
+                <span className={styles['av-account-info-value']}>
+                  {security.phone || profile.phone || 'Не указан'}
+                </span>
+              </div>
+              <div className={styles['av-account-info-item']}>
+                <span className={styles['av-account-info-label']}>Пароль</span>
+                <span className={styles['av-account-info-value']}>
+                  {security.isPasswordSet ? 'Обновлён недавно' : 'Не задан'}
+                </span>
+              </div>
+            </div>
+          )}
         </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-security-phone">Новый телефон</label>
-          <input
-            id="account-security-phone"
-            name="phone"
-            type="tel"
-            value={security.phone}
-            onChange={handleSecurityChange}
-            placeholder="+7 (___) ___-__-__"
-            autoComplete="tel"
-          />
-        </div>
-        <div className={styles['av-account-field']}>
-          <label htmlFor="account-security-password">Пароль</label>
-          <input
-            id="account-security-password"
-            name="password"
-            type="password"
-            value={security.password}
-            onChange={handleSecurityChange}
-            placeholder="Новый пароль"
-            autoComplete="new-password"
-          />
-        </div>
-      </div>
-      <button type="submit" className={styles['av-account-save']}>
-        Сохранить
-      </button>
-      {securitySaved ? <p className={styles['av-account-feedback']}>Настройки обновлены</p> : null}
-    </form>
+      </section>
+    </div>
   );
 
   const renderFavoritesTab = () => (
-    <div>
-      {favoriteProducts.length > 0 ? (
-        <div className={styles['av-account-favorites-grid']}>
-          {favoriteProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+    <div className={styles['av-account-stack']}>
+      <section className={styles['av-account-card']} data-mode="view">
+        <header className={styles['av-account-card-header']}>
+          <div>
+            <h2>Избранное</h2>
+            <p>Сохраняйте любимые продукты и следите за их наличием.</p>
+          </div>
+        </header>
+        <div className={`${styles['av-account-card-body']} ${styles['av-account-card-body-view']}`}>
+          {favoriteProducts.length > 0 ? (
+            <div className={styles['av-account-favorites-grid']}>
+              {favoriteProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          ) : (
+            <div className={styles['av-account-empty']}>
+              <p>
+                Вы ещё не добавили товары в избранное. Сохраняйте понравившиеся позиции и возвращайтесь к
+                ним позже.
+              </p>
+              <Link href="/catalog" className={styles['av-account-empty-link']}>
+                Перейти в каталог
+              </Link>
+            </div>
+          )}
         </div>
-      ) : (
-        <div className={styles['av-account-empty']}>
-          <p>Вы ещё не добавили товары в избранное. Сохраняйте понравившиеся позиции и возвращайтесь к ним позже.</p>
-          <Link href="/catalog" className={styles['av-account-empty-link']}>
-            Перейти в каталог
-          </Link>
-        </div>
-      )}
+      </section>
     </div>
   );
 
@@ -465,6 +749,10 @@ const AccountPage = () => {
     panelContent = renderSecurityTab();
   } else {
     panelContent = renderFavoritesTab();
+  }
+
+  if (!isAuthenticated) {
+    return null;
   }
 
   return (
