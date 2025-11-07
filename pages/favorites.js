@@ -113,7 +113,7 @@ const FavoritesPage = () => {
                           {product.description}
                         </p>
                         <span className={styles['av-fav-item-price']}>
-                          {product.price.toLocaleString()} ₽
+                          {product.price.toLocaleString()} ₺
                         </span>
                       </div>
                     </div>

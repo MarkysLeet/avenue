@@ -229,7 +229,7 @@ const ProductCard = ({ product }) => {
         <h3>{product.name}</h3>
         <p className={styles.description}>{product.description}</p>
         <div className={styles.footer}>
-          <span className={styles.price}>{product.price.toLocaleString()} ₽</span>
+          <span className={styles.price}>{product.price.toLocaleString()} ₺</span>
           <div className={styles.actions}>
             <button
               type="button"

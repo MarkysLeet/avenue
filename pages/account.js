@@ -51,8 +51,8 @@ const mockOrders = [
     status: 'В обработке',
     total: 2680,
     items: [
-      { productId: 'np-rose-veil', quantity: 1 },
-      { productId: 'np-powder-blush', quantity: 1 }
+      { productId: 'klassicheskaya-seriya-gel-lakov-01', quantity: 1 },
+      { productId: 'klassicheskaya-seriya-gel-lakov-02', quantity: 1 }
     ]
   },
   {
@@ -61,7 +61,7 @@ const mockOrders = [
     status: 'Отправлен',
     total: 8140,
     items: [
-      { productId: 'mt-drill', quantity: 1 },
+      { productId: 'frezer-dlya-manikyura', quantity: 1 },
       { productId: 'consumable-wipes', quantity: 2 }
     ]
   },
@@ -787,7 +787,7 @@ const AccountPage = () => {
                     {order.status}
                   </span>
                 </td>
-                <td>{order.total.toLocaleString()} ₽</td>
+                <td>{order.total.toLocaleString()} ₺</td>
                 <td>
                   <button
                     type="button"

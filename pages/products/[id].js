@@ -44,7 +44,7 @@ const ProductPage = () => {
         <div className={styles.info}>
           <h1>{product.name}</h1>
           <p className={styles.description}>{product.description}</p>
-          <p className={styles.price}>{product.price.toLocaleString()} ₽</p>
+          <p className={styles.price}>{product.price.toLocaleString()} ₺</p>
           <button className={styles.addButton} onClick={handleAdd}>
             Добавить в корзину
           </button>

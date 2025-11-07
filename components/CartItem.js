@@ -21,7 +21,7 @@ const CartItem = ({ item, onUpdate, onRemove }) => {
         </div>
         <span className={styles['av-cart-title']}>{item.name}</span>
       </Link>
-      <p className={styles.price}>{item.price.toLocaleString()} ₽</p>
+      <p className={styles.price}>{item.price.toLocaleString()} ₺</p>
       <div className={styles.controls}>
         <label className={styles.quantityLabel}>
           Количество

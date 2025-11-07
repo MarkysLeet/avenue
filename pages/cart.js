@@ -48,7 +48,7 @@ const CartPage = () => {
             </div>
             <aside className={styles.summary}>
               <h2>Итого</h2>
-              <p className={styles.total}>{total.toLocaleString()} ₽</p>
+              <p className={styles.total}>{total.toLocaleString()} ₺</p>
               {addresses.length > 0 ? (
                 <div className={styles['av-cart-address']}>
                   <label htmlFor="cart-address-select">Адрес доставки</label>

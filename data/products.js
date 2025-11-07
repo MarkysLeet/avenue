@@ -9,58 +9,58 @@ export const categories = categoriesData.map((category) => ({
 
 export const products = [
   {
-    id: 'np-rose-veil',
+    id: 'klassicheskaya-seriya-gel-lakov-01',
     category: 'nail-polish',
-    name: 'Rose Veil',
-    price: 890,
+    name: 'Классическая серия гель-лаков 01',
+    price: 315,
     description:
-      'Лак с шелковистым финишем и витаминным комплексом для укрепления ногтей.',
-    image: '/images/nail-polish-rose-veil.svg'
+      'Плотный пигмент, ровное покрытие с первого слоя. Подходит для базы и выравнивания.',
+    image: 'https://avenueprofessional.net/assets/images/1755206610IMG_3588.jpeg'
   },
   {
-    id: 'np-sunset-glow',
+    id: 'klassicheskaya-seriya-gel-lakov-02',
     category: 'nail-polish',
-    name: 'Sunset Glow',
-    price: 920,
+    name: 'Классическая серия гель-лаков 02',
+    price: 315,
     description:
-      'Теплый персиковый оттенок с ультратонким шиммером для сияния.',
-    image: '/images/nail-polish-sunset-glow.svg'
+      'Универсальный оттенок на каждый день: самовыравнивание, стойкость до 3–4 недель.',
+    image: 'https://avenueprofessional.net/assets/images/17552588807DC9983D-E3DA-4EC2-A79F-ACFC85688F7C.jpeg'
   },
   {
-    id: 'np-powder-blush',
+    id: 'klassicheskaya-seriya-gel-lakov-04',
     category: 'nail-polish',
-    name: 'Powder Blush',
-    price: 870,
+    name: 'Классическая серия гель-лаков 04',
+    price: 315,
     description:
-      'Мягкий розовый лак, который ложится ровно и держится до 7 дней.',
-    image: '/images/nail-polish-powder-blush.svg'
+      'Глубокий насыщенный цвет, без полос и проплешин. Для профессионального и домашнего использования.',
+    image: 'https://avenueprofessional.net/assets/images/1754736830IMG_2338.jpeg'
   },
   {
-    id: 'mt-uv-lamp',
+    id: 'frezer-dlya-manikyura',
     category: 'manicure-tools',
-    name: 'UV Soft Lamp',
-    price: 3490,
+    name: 'Фрезер для маникюра',
+    price: 3500,
     description:
-      'Компактная UV-лампа с двумя режимами мощности и сенсорным управлением.',
-    image: '/images/manicure-uv-lamp.svg'
+      'Мощный и тихий. Подходит для маникюра и коррекции. Регулировка оборотов, реверс.',
+    image: 'https://avenueprofessional.net/assets/images/1695896416frezer.jpg'
   },
   {
-    id: 'mt-drill',
+    id: 'besprovodnaya-uv-led-lampa-chernaya',
     category: 'manicure-tools',
-    name: 'Smooth Drill Pro',
-    price: 5290,
+    name: 'Беспроводная UV/LED лампа, чёрная',
+    price: 2400,
     description:
-      'Электрический аппарат для маникюра с набором насадок и регулировкой скорости.',
-    image: '/images/manicure-drill.svg'
+      'Равномерная полимеризация гелей и гель-лаков. Автономная работа и режимы таймера.',
+    image: 'https://avenueprofessional.net/assets/images/17113060561000000428.jpg'
   },
   {
-    id: 'mt-sterilizer',
+    id: 'besprovodnaya-vytyazhka-dlya-manikyura',
     category: 'manicure-tools',
-    name: 'Pure Care Sterilizer',
-    price: 2790,
+    name: 'Беспроводная вытяжка для маникюра',
+    price: 4500,
     description:
-      'Стерилизатор инструментов с кварцевыми шариками для надежной дезинфекции.',
-    image: '/images/manicure-sterilizer.svg'
+      'Эффективное удаление пыли, компактный корпус и высокая производительность для чистой рабочей зоны.',
+    image: 'https://avenueprofessional.net/assets/images/1753703370IMG_0935.jpeg'
   },
   {
     id: 'gel-sculptor',
