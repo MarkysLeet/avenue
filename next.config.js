@@ -6,6 +6,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'avenueprofessional.net',
         pathname: '/assets/images/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.avenueprofessional.net',
+        pathname: '/assets/images/**'
       }
     ]
   }
