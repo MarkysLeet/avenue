@@ -9,12 +9,39 @@ import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
 import styles from '../styles/ProductCard.module.css';
 
+let avCardObserver;
+
+const getCardObserver = () => {
+  if (typeof window === 'undefined') {
+    return null;
+  }
+
+  if (!avCardObserver) {
+    avCardObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-inview');
+            if (avCardObserver) {
+              avCardObserver.unobserve(entry.target);
+            }
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+  }
+
+  return avCardObserver;
+};
+
 const ProductCard = ({ product }) => {
   const router = useRouter();
   const { items, addToCart, removeFromCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
   const { isAuthenticated } = useAuth();
   const { toast } = useToast();
+  const cardRef = useRef(null);
   const buttonRef = useRef(null);
   const [isButtonAnimating, setIsButtonAnimating] = useState(false);
   const [flight, setFlight] = useState(null);
@@ -30,6 +57,28 @@ const ProductCard = ({ product }) => {
 
   const favoriteActive = isAuthenticated && isFavorite(product.id);
   const inCart = items.some((item) => item.id === product.id);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return undefined;
+    }
+
+    const node = cardRef.current;
+    if (!node) {
+      return undefined;
+    }
+
+    const observer = getCardObserver();
+    if (!observer) {
+      return undefined;
+    }
+
+    observer.observe(node);
+
+    return () => {
+      observer.unobserve(node);
+    };
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -195,13 +244,18 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className={`${styles.card} av-card-w`}>
-      <div className={styles.imageWrapper}>
+    <div
+      ref={cardRef}
+      data-av-card
+      className={`${styles.card} av-card av-card-w av-card-hover`}
+    >
+      <div className={`av-card-media ${styles.imageWrapper}`}>
         <Image
           src={product.image}
           alt={product.name}
           fill
           sizes="(max-width: 768px) 50vw, 240px"
+          className="av-card-img"
           style={{ objectFit: 'contain' }}
         />
         <button
@@ -225,12 +279,12 @@ const ProductCard = ({ product }) => {
           </svg>
         </button>
       </div>
-      <div className={styles.content}>
-        <h3>{product.name}</h3>
-        <p className={styles.description}>{product.description}</p>
-        <div className={styles.footer}>
+      <div className={`av-card-body ${styles.content}`}>
+        <h3 className="av-clamp-2">{product.name}</h3>
+        <p className={`${styles.description} av-clamp-3`}>{product.description}</p>
+        <div className={`${styles.footer} av-card-footer`}>
           <span className={styles.price}>{product.price.toLocaleString()} ₺</span>
-          <div className={styles.actions}>
+          <div className={`${styles.actions} av-card-actions`}>
             <button
               type="button"
               ref={buttonRef}

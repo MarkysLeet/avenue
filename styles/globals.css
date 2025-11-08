@@ -79,42 +79,133 @@ html {
   scroll-behavior: smooth;
 }
 
-/* --- Avenue: fixed product grid (max 4 per row) --- */
+/* --- Avenue: product grid & card polish --- */
 .av-grid-products {
-  display: grid !important;
+  display: grid;
   justify-content: start;
-  gap: 1rem !important;
-  grid-template-columns: repeat(4, 270px) !important;
+  gap: 1.5rem;
+  grid-template-columns: repeat(4, 300px);
 }
 
 @media (max-width: 1280px) {
   .av-grid-products {
-    grid-template-columns: repeat(3, 270px) !important;
+    grid-template-columns: repeat(3, 300px);
   }
 }
 
 @media (max-width: 1024px) {
   .av-grid-products {
-    grid-template-columns: repeat(2, 270px) !important;
+    grid-template-columns: repeat(2, 300px);
   }
 }
 
 @media (max-width: 640px) {
   .av-grid-products {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 }
 
-/* фиксированная ширина карточки; на мобиле 100% */
 .av-card-w {
-  width: 270px !important;
+  width: 300px;
 }
 
 @media (max-width: 640px) {
   .av-card-w {
-    width: 100% !important;
+    width: 100%;
   }
 }
+
+.av-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.av-card-img {
+  object-fit: contain;
+  width: 100%;
+  height: 100%;
+}
+
+.av-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.av-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.av-card-footer {
+  margin-top: auto !important;
+}
+
+.av-card-actions {
+  margin-top: auto;
+  display: grid !important;
+  gap: 0.5rem !important;
+}
+
+.av-clamp-2,
+.av-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.av-clamp-2 {
+  -webkit-line-clamp: 2;
+}
+
+.av-clamp-3 {
+  -webkit-line-clamp: 3;
+}
+
+.av-card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  will-change: transform;
+}
+
+.av-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+[data-av-card] {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+[data-av-card].is-inview {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.av-grid-products > *:nth-child(1) {
+  transition-delay: 0s;
+}
+
+.av-grid-products > *:nth-child(2) {
+  transition-delay: 0.04s;
+}
+
+.av-grid-products > *:nth-child(3) {
+  transition-delay: 0.08s;
+}
+
+.av-grid-products > *:nth-child(4) {
+  transition-delay: 0.12s;
+}
+
+/* задержка сбрасывается на следующих строках автоматически */
 
 /* --- Avenue: route loader overlay --- */
 .av-route-loader {
