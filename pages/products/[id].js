@@ -31,7 +31,7 @@ const ProductPage = () => {
 
   return (
     <Layout title={`${product.name} — Avenue Beauty`}>
-      <section className={styles.productSection}>
+      <section className={`${styles.productSection} av-top-trim`}>
         <div className={styles.imageWrapper}>
           <Image
             src={product.image}

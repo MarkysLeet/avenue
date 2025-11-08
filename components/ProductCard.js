@@ -300,7 +300,7 @@ const ProductCard = ({ product }) => {
             >
               {inCart ? 'В корзине' : 'В корзину'}
             </button>
-            <Link href={`/products/${product.id}`} className={styles.more}>
+            <Link href={`/products/${product.id}`} className={`${styles.more} av-btn-center`}>
               Подробнее
             </Link>
           </div>

@@ -78,7 +78,9 @@ const RegisterPage = () => {
                   placeholder="Например, Анна"
                 />
               </label>
-              <label className={`${styles.label} ${styles['av-label-nowrap']}`}>
+              <label
+                className={`${styles.label} ${styles['av-label-nowrap']} whitespace-nowrap leading-tight sm:text-base text-sm`}
+              >
                 Фамилия (необязательно)
                 <input
                   className={styles.input}

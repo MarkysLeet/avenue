@@ -79,40 +79,28 @@ html {
   scroll-behavior: smooth;
 }
 
-/* --- Avenue: product grid & card polish --- */
+/* --- Avenue: robust product grid --- */
 .av-grid-products {
   display: grid;
-  justify-content: start;
-  gap: 1.5rem;
-  grid-template-columns: repeat(4, 300px);
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+  align-items: stretch;
 }
 
-@media (max-width: 1280px) {
+@media (min-width: 1536px) {
   .av-grid-products {
-    grid-template-columns: repeat(3, 300px);
-  }
-}
-
-@media (max-width: 1024px) {
-  .av-grid-products {
-    grid-template-columns: repeat(2, 300px);
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   }
 }
 
 @media (max-width: 640px) {
   .av-grid-products {
-    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 
 .av-card-w {
-  width: 300px;
-}
-
-@media (max-width: 640px) {
-  .av-card-w {
-    width: 100%;
-  }
+  width: 100%;
 }
 
 .av-card-media {
@@ -140,17 +128,23 @@ html {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  flex: 1;
-}
-
-.av-card-footer {
-  margin-top: auto !important;
 }
 
 .av-card-actions {
   margin-top: auto;
   display: grid !important;
+  grid-template-columns: 1fr 1fr;
   gap: 0.5rem !important;
+}
+
+@media (max-width: 640px) {
+  .av-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.av-btn-center {
+  text-align: center;
 }
 
 .av-clamp-2,
@@ -178,10 +172,11 @@ html {
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
 }
 
+/* --- Avenue: softer card reveal --- */
 [data-av-card] {
   opacity: 0;
-  transform: translateY(10px) scale(0.98);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transform: translateY(16px) scale(0.985);
+  transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
 [data-av-card].is-inview {
@@ -194,18 +189,40 @@ html {
 }
 
 .av-grid-products > *:nth-child(2) {
-  transition-delay: 0.04s;
-}
-
-.av-grid-products > *:nth-child(3) {
   transition-delay: 0.08s;
 }
 
-.av-grid-products > *:nth-child(4) {
-  transition-delay: 0.12s;
+.av-grid-products > *:nth-child(3) {
+  transition-delay: 0.16s;
 }
 
-/* задержка сбрасывается на следующих строках автоматически */
+.av-grid-products > *:nth-child(4) {
+  transition-delay: 0.24s;
+}
+
+.av-grid-products > *:nth-child(5) {
+  transition-delay: 0.32s;
+}
+
+.av-grid-products > *:nth-child(6) {
+  transition-delay: 0.4s;
+}
+
+/* --- Avenue: smooth anchor offset under sticky header --- */
+.av-scroll-margin {
+  scroll-margin-top: 96px;
+}
+
+@media (max-width: 768px) {
+  .av-scroll-margin {
+    scroll-margin-top: 76px;
+  }
+}
+
+/* --- Avenue: trim extra top space under sticky header on product pages --- */
+.av-top-trim {
+  margin-top: clamp(24px, 5vw, 48px);
+}
 
 /* --- Avenue: route loader overlay --- */
 .av-route-loader {

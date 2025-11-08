@@ -34,7 +34,7 @@ const Home = () => {
         </div>
         <CategoryGrid categories={categories} />
       </section>
-      <section className={`${styles.section} ${styles.softSection}`} id="featured">
+      <section className={`${styles.section} ${styles.softSection} av-scroll-margin`} id="featured">
         <div className={styles.sectionHeader}>
           <h2>Новинки &amp; рекомендации</h2>
           <p>Подборка продуктов, которые наши клиенты выбирают снова и снова.</p>
