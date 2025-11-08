@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import CategoryGrid from '../components/CategoryGrid';
@@ -61,9 +62,9 @@ const Home = () => {
           <div className={styles.promoText}>
             <h2>Салон на расстоянии клика.</h2>
             <p>Соберите профессиональный набор оборудования и создайте студию в любимом уголке дома.</p>
-            <a href="/catalog/manicure-tools" className={styles.promoCta}>
+            <Link href="/catalog/manicure-tools" className={styles.promoCta}>
               Каталог оборудования
-            </a>
+            </Link>
           </div>
         </div>
       </section>

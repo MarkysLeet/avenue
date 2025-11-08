@@ -86,6 +86,7 @@ const statusVariants = {
 
 const AccountPage = () => {
   const router = useRouter();
+  const { push, replace } = router;
   const { user, isAuthenticated, updateProfile, changeEmail, changePassword } = useAuth();
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -124,11 +125,11 @@ const AccountPage = () => {
         type: 'warning',
         message: 'Требуется авторизация для доступа к личному кабинету',
         actionLabel: 'Войти',
-        onAction: () => router.push('/auth/login?returnTo=/account')
+        onAction: () => push('/auth/login?returnTo=/account')
       });
-      router.replace('/auth/login?returnTo=/account');
+      replace('/auth/login?returnTo=/account');
     }
-  }, [isAuthenticated, router, toast]);
+  }, [isAuthenticated, push, replace, toast]);
 
   useEffect(() => {
     if (typeof window === 'undefined') {

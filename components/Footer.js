@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import styles from '../styles/Footer.module.css';
 
 const Footer = () => {
@@ -9,9 +10,9 @@ const Footer = () => {
           Создаем салонное настроение дома: косметика, техника и сервис премиум-класса.
         </p>
         <div className={styles.links}>
-          <a href="/catalog/nail-polish">Лаки</a>
-          <a href="/catalog/manicure-tools">Оборудование</a>
-          <a href="/auth/login">Вход / Регистрация</a>
+          <Link href="/catalog/nail-polish">Лаки</Link>
+          <Link href="/catalog/manicure-tools">Оборудование</Link>
+          <Link href="/auth/login">Вход / Регистрация</Link>
         </div>
         <div className={styles.socials}>
           <a href="#" aria-label="Instagram">
