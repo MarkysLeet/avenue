@@ -195,7 +195,7 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} av-card-w`}>
       <div className={styles.imageWrapper}>
         <Image
           src={product.image}

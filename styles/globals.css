@@ -73,3 +73,84 @@ section {
     transform: translateX(-50%);
   }
 }
+
+/* --- Avenue: smooth scrolling for in-page anchors --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- Avenue: fixed product grid (max 4 per row) --- */
+.av-grid-products {
+  display: grid !important;
+  justify-content: start;
+  gap: 1rem !important;
+  grid-template-columns: repeat(4, 270px) !important;
+}
+
+@media (max-width: 1280px) {
+  .av-grid-products {
+    grid-template-columns: repeat(3, 270px) !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .av-grid-products {
+    grid-template-columns: repeat(2, 270px) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .av-grid-products {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* фиксированная ширина карточки; на мобиле 100% */
+.av-card-w {
+  width: 270px !important;
+}
+
+@media (max-width: 640px) {
+  .av-card-w {
+    width: 100% !important;
+  }
+}
+
+/* --- Avenue: route loader overlay --- */
+.av-route-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 1800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+}
+
+.av-loader {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.av-loader-spinner {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  border-top-color: rgba(255, 255, 255, 0.9);
+  border-right-color: rgba(255, 255, 255, 0.5);
+  animation: av-loader-spin 0.9s linear infinite;
+}
+
+@keyframes av-loader-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

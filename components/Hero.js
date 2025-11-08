@@ -2,6 +2,17 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../styles/Hero.module.css';
 
+const handleAnchorClick = (event) => {
+  const href = (event.currentTarget.getAttribute('href') || '').trim();
+  if (href && href.startsWith('#')) {
+    event.preventDefault();
+    const target = document.querySelector(href);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+};
+
 const Hero = () => {
   return (
     <section className={styles.hero}>
@@ -16,7 +27,7 @@ const Hero = () => {
           <Link className={styles.primaryCta} href="/categories">
             Смотреть каталог
           </Link>
-          <a className={styles.secondaryCta} href="#featured">
+          <a className={styles.secondaryCta} href="#featured" onClick={handleAnchorClick}>
             Новинки
           </a>
         </div>

@@ -25,7 +25,7 @@ const CategoryDetailPage = ({ category, products }) => {
         {category?.description ? (
           <p className={styles.description}>{category.description}</p>
         ) : null}
-        <div className={styles.grid}>
+        <div className={`${styles.grid} av-grid-products`}>
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
