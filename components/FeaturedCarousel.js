@@ -15,8 +15,9 @@ const getPerSlideByWidth = (width) => {
 };
 
 const FeaturedCarousel = ({ products = [] }) => {
-  const focusWithinRef = useRef(false);
   const liveMessageRef = useRef(null);
+  const hoverRef = useRef(false);
+  const focusRef = useRef(false);
   const [perSlide, setPerSlide] = useState(() => {
     if (typeof window === 'undefined') {
       return 1;
@@ -24,7 +25,7 @@ const FeaturedCarousel = ({ products = [] }) => {
     return getPerSlideByWidth(window.innerWidth);
   });
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -64,7 +65,7 @@ const FeaturedCarousel = ({ products = [] }) => {
   }, [activeIndex, slides.length]);
 
   useEffect(() => {
-    if (slides.length < 2 || isPaused) {
+    if (slides.length < 2 || paused) {
       return undefined;
     }
 
@@ -79,7 +80,7 @@ const FeaturedCarousel = ({ products = [] }) => {
     }, AUTO_DELAY);
 
     return () => clearInterval(timer);
-  }, [isPaused, slides.length]);
+  }, [paused, slides.length]);
 
   useEffect(() => {
     if (!liveMessageRef.current) {
@@ -108,30 +109,35 @@ const FeaturedCarousel = ({ products = [] }) => {
     [slides.length]
   );
 
-  const handleMouseEnter = () => setIsPaused(true);
+  const handleMouseEnter = () => {
+    hoverRef.current = true;
+    setPaused(true);
+  };
+
   const handleMouseLeave = () => {
-    if (!focusWithinRef.current) {
-      setIsPaused(false);
-    }
+    hoverRef.current = false;
+    setPaused(focusRef.current);
   };
 
-  const handleTouchStart = () => setIsPaused(true);
+  const handleTouchStart = () => {
+    hoverRef.current = true;
+    setPaused(true);
+  };
+
   const handleTouchEnd = () => {
-    if (!focusWithinRef.current) {
-      setIsPaused(false);
-    }
+    hoverRef.current = false;
+    setPaused(focusRef.current);
   };
 
-  const handleFocusCapture = () => {
-    focusWithinRef.current = true;
-    setIsPaused(true);
+  const handleFocus = () => {
+    focusRef.current = true;
+    setPaused(true);
   };
-
-  const handleBlurCapture = (event) => {
+  const handleBlur = (event) => {
     const nextTarget = event.relatedTarget;
     if (!nextTarget || !event.currentTarget.contains(nextTarget)) {
-      focusWithinRef.current = false;
-      setIsPaused(false);
+      focusRef.current = false;
+      setPaused(hoverRef.current);
     }
   };
 
@@ -141,13 +147,13 @@ const FeaturedCarousel = ({ products = [] }) => {
 
   return (
     <section
-      className={styles.carousel}
+      className={`${styles.carousel} av-carousel relative overflow-visible`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
-      onFocusCapture={handleFocusCapture}
-      onBlurCapture={handleBlurCapture}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
       role="region"
       aria-roledescription="carousel"
       aria-label="Новинки и рекомендации"
@@ -172,7 +178,7 @@ const FeaturedCarousel = ({ products = [] }) => {
         <>
           <button
             type="button"
-            className={`${styles.navButton} ${styles.navButtonPrev}`}
+            className={`${styles.navButton} ${styles.navButtonPrev} av-cr-nav av-cr-prev`}
             onClick={() => goToIndex(activeIndex - 1)}
             aria-label="Предыдущий слайд"
           >
@@ -180,7 +186,7 @@ const FeaturedCarousel = ({ products = [] }) => {
           </button>
           <button
             type="button"
-            className={`${styles.navButton} ${styles.navButtonNext}`}
+            className={`${styles.navButton} ${styles.navButtonNext} av-cr-nav av-cr-next`}
             onClick={() => goToIndex(activeIndex + 1)}
             aria-label="Следующий слайд"
           >

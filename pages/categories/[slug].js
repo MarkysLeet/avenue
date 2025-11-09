@@ -25,10 +25,12 @@ const CategoryDetailPage = ({ category, products }) => {
         {category?.description ? (
           <p className={styles.description}>{category.description}</p>
         ) : null}
-        <div className={`${styles.grid} av-grid-products`}>
-          {products.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="av-grid-lock">
+          <div className={`${styles.grid} av-grid-products`}>
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </div>
         {products.length === 0 ? (
           <p className={styles.empty}>

@@ -79,65 +79,53 @@ html {
   scroll-behavior: smooth;
 }
 
-/* --- Avenue: fixed 4-up grid --- */
-/* Десктоп: ровно 4 колонки фиксированной ширины, карточки не тянутся */
-.av-grid-products {
-  display: grid;
-  justify-content: space-between;
-  gap: 1.25rem;
-  grid-template-columns: repeat(4, 340px);
+/* --- Avenue: hard 4-up grid with wrap --- */
+:root {
+  --av-card-w: 340px;
+  --av-gap: 20px;
 }
 
-/* <=1280px: 3 колонки того же размера (если 4 не влезают) */
+.av-grid-lock {
+  width: 100%;
+  margin-inline: auto;
+}
+
+.av-grid-products {
+  display: grid !important;
+  grid-template-columns: repeat(4, var(--av-card-w)) !important;
+  gap: var(--av-gap) !important;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
 @media (max-width: 1280px) {
   .av-grid-products {
-    grid-template-columns: repeat(3, 340px);
+    grid-template-columns: repeat(3, var(--av-card-w)) !important;
   }
 }
 
-/* <=1024px: 2 колонки, мобильнее — 1 колонка */
 @media (max-width: 1024px) {
   .av-grid-products {
-    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, var(--av-card-w)) !important;
     justify-content: center;
   }
 }
 
 @media (max-width: 640px) {
   .av-grid-products {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
   }
 }
 
-/* Карточка фиксированной ширины на десктопе, 100% на мобиле */
 .av-card-w {
-  width: 340px;
+  width: var(--av-card-w);
 }
 
 @media (max-width: 640px) {
   .av-card-w {
     width: 100%;
   }
-}
-
-/* Кнопки в ряд на десктопе, в столбик на мобиле */
-.av-card-actions {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem !important;
-  margin-top: auto;
-}
-
-@media (max-width: 640px) {
-  .av-card-actions {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Центрирование текста на кнопке «Подробнее» */
-.av-btn-center {
-  text-align: center;
 }
 
 .av-card-media {
@@ -167,6 +155,23 @@ html {
   gap: 0.5rem;
 }
 
+.av-card-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  margin-top: auto;
+}
+
+@media (max-width: 640px) {
+  .av-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.av-btn-center {
+  text-align: center;
+}
+
 .av-clamp-2,
 .av-clamp-3 {
   display: -webkit-box;
@@ -190,6 +195,27 @@ html {
 .av-card-hover:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Avenue: carousel nav overlay --- */
+.av-carousel {
+  position: relative;
+  overflow: visible;
+}
+
+.av-cr-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 60;
+}
+
+.av-cr-prev {
+  left: 8px;
+}
+
+.av-cr-next {
+  right: 8px;
 }
 
 /* --- Avenue: softer card reveal --- */

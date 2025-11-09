@@ -38,10 +38,12 @@ const CatalogIndexPage = () => {
             Изучите весь ассортимент Avenue Professional и подберите идеальный набор для ухода.
           </p>
         )}
-        <div className={`${styles.grid} av-grid-products`}>
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="av-grid-lock">
+          <div className={`${styles.grid} av-grid-products`}>
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         </div>
         {filteredProducts.length === 0 && (
           <p className={styles.empty}>По вашему запросу ничего не найдено. Попробуйте изменить критерии.</p>

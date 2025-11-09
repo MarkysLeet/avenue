@@ -1,6 +1,6 @@
 .carousel {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .viewport {
@@ -68,14 +68,6 @@
   line-height: 1;
 }
 
-.navButtonPrev {
-  left: -18px;
-}
-
-.navButtonNext {
-  right: -18px;
-}
-
 .dots {
   display: flex;
   gap: 8px;
@@ -112,16 +104,6 @@
   padding: 0;
   clip: rect(0 0 0 0);
   overflow: hidden;
-}
-
-@media (max-width: 1024px) {
-  .navButtonPrev {
-    left: -6px;
-  }
-
-  .navButtonNext {
-    right: -6px;
-  }
 }
 
 @media (max-width: 768px) {
