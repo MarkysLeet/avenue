@@ -1,0 +1,10 @@
+# шрифты/бинарники (на будущее не коммитить)
+public/fonts/
+*.woff
+*.woff2
+*.ttf
+*.otf
+*.zip
+*.7z
+*.tar
+*.tar.gz

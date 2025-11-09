@@ -1,0 +1,240 @@
+.card {
+  background: var(--color-surface);
+  border-radius: 18px;
+  border: 1px solid var(--color-border);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 18px 40px rgba(26, 26, 26, 0.05);
+  transition: var(--transition-base);
+}
+
+.card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-6px);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(180deg, #fff8fb 0%, #ffffff 100%);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.card:hover .av-fav-btn,
+.card:focus-within .av-fav-btn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.content h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.description {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.6;
+  min-height: 72px;
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.price {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cartButton {
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: none;
+  background-color: var(--color-primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-base);
+  position: relative;
+}
+
+.cartButton:hover {
+  box-shadow: 0 16px 28px rgba(226, 0, 122, 0.2);
+  transform: translateY(-2px);
+}
+
+.av-in-cart {
+  background-color: #ffffff;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  transform: scale(0.98);
+  transition: transform 0.12s ease, color 0.2s ease, background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.av-in-cart:hover,
+.av-in-cart:focus-visible {
+  transform: scale(1);
+  box-shadow: 0 12px 24px rgba(226, 0, 122, 0.18);
+  outline: none;
+}
+
+.av-cart-button-pulse {
+  animation: av-cart-button-pulse 0.28s ease;
+  box-shadow: 0 0 0 10px rgba(226, 0, 122, 0.12);
+}
+
+@keyframes av-cart-button-pulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.more {
+  padding: 12px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: var(--transition-base);
+}
+
+.more:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.av-flyer {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ffffff 12%, rgba(226, 0, 122, 0.9));
+  box-shadow: 0 12px 22px rgba(226, 0, 122, 0.25);
+  pointer-events: none;
+  z-index: 1600;
+  opacity: 0;
+}
+
+.av-flyer-active {
+  animation: av-flyer-motion 0.45s ease-in-out forwards;
+}
+
+@keyframes av-flyer-motion {
+  0% {
+    opacity: 0.75;
+    transform: translate3d(0, 0, 0) scale(0.6);
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--av-flyer-x), var(--av-flyer-y), 0) scale(0.25);
+  }
+}
+
+.av-fav-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.9);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 10px 22px rgba(26, 26, 26, 0.08);
+}
+
+.av-fav-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.av-fav-btn-active {
+  background: rgba(226, 0, 122, 0.12);
+}
+
+.av-fav-btn-active .av-fav-icon {
+  fill: var(--color-primary);
+  stroke: var(--color-primary);
+}
+
+.av-fav-icon {
+  width: 22px;
+  height: 22px;
+  fill: transparent;
+  stroke: var(--color-text);
+  stroke-width: 1.8;
+  transition: fill 0.2s ease, stroke 0.2s ease, transform 0.2s ease;
+}
+
+.av-fav-btn-pulse .av-fav-icon {
+  animation: av-fav-pop 0.22s ease;
+}
+
+.av-fav-btn-shake {
+  animation: av-fav-shake 0.32s ease;
+}
+
+@keyframes av-fav-shake {
+  0% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+  30% {
+    transform: translateY(-10px) rotate(-8deg);
+  }
+  60% {
+    transform: translateY(-10px) rotate(6deg);
+  }
+  100% {
+    transform: translateY(-10px) rotate(0deg);
+  }
+}
+
+@keyframes av-fav-pop {
+  0% {
+    transform: scale(0.92);
+  }
+  55% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

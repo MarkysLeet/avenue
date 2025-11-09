@@ -1,0 +1,233 @@
+.av-fav-section {
+  margin-top: 48px;
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.av-fav-header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.av-fav-header h1 {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.av-fav-header p {
+  margin: 0;
+  color: var(--color-muted);
+  max-width: 520px;
+  line-height: 1.6;
+}
+
+.av-fav-guard,
+.av-fav-empty {
+  display: grid;
+  gap: 16px;
+  background: rgba(255, 248, 251, 0.78);
+  border-radius: 24px;
+  border: 1px solid rgba(231, 223, 228, 0.9);
+  padding: 32px;
+  box-shadow: 0 24px 40px rgba(26, 26, 26, 0.08);
+}
+
+.av-fav-guard p,
+.av-fav-empty p {
+  margin: 0;
+  color: var(--color-muted);
+  max-width: 520px;
+}
+
+.av-fav-cta {
+  justify-self: start;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border: 1px solid var(--color-text);
+  background: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.av-fav-cta:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 18px 32px rgba(226, 0, 122, 0.18);
+}
+
+.av-fav-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.av-fav-sort {
+  min-width: 200px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(231, 223, 228, 0.9);
+  background: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+  color: var(--color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.av-fav-sort:focus-visible {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(226, 0, 122, 0.18);
+}
+
+.av-fav-list {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.av-fav-list-item {
+  margin: 0;
+}
+
+.av-fav-item {
+  display: flex;
+  align-items: stretch;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 24px;
+  border-radius: 24px;
+  background: rgba(255, 248, 251, 0.82);
+  border: 1px solid rgba(231, 223, 228, 0.9);
+  box-shadow: 0 24px 40px rgba(26, 26, 26, 0.08);
+}
+
+.av-fav-item-main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1 1 320px;
+}
+
+.av-fav-item-image {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(231, 223, 228, 0.8);
+}
+
+.av-fav-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.av-fav-item-link {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.av-fav-item-link:hover,
+.av-fav-item-link:focus-visible {
+  color: var(--color-primary);
+  outline: none;
+}
+
+.av-fav-item-description {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+.av-fav-item-price {
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.av-fav-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.av-fav-action,
+.av-fav-action-secondary {
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, color 0.2s ease,
+    background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.av-fav-action {
+  border: none;
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.av-fav-action:hover,
+.av-fav-action:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px rgba(226, 0, 122, 0.18);
+  outline: none;
+}
+
+.av-fav-action-secondary {
+  border: 1px solid var(--color-border);
+  background: #ffffff;
+  color: var(--color-text);
+}
+
+.av-fav-action-secondary:hover,
+.av-fav-action-secondary:focus-visible {
+  transform: translateY(-1px);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 14px 24px rgba(226, 0, 122, 0.15);
+  outline: none;
+}
+
+@media (max-width: 720px) {
+  .av-fav-section {
+    padding: 0 16px;
+  }
+
+  .av-fav-header h1 {
+    font-size: 2rem;
+  }
+
+  .av-fav-item {
+    padding: 20px;
+  }
+
+  .av-fav-item-main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .av-fav-item-image {
+    width: 88px;
+    height: 88px;
+  }
+
+  .av-fav-item-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
