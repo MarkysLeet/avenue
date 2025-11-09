@@ -147,7 +147,7 @@ const FeaturedCarousel = ({ products = [] }) => {
 
   return (
     <section
-      className={`${styles.carousel} av-carousel relative overflow-visible`}
+      className={`${styles.carousel} av-carousel`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
@@ -165,9 +165,9 @@ const FeaturedCarousel = ({ products = [] }) => {
         >
           {slides.map((group, index) => (
             <div key={`slide-${index}`} className={styles.slide}>
-              <div className={styles.slideInner}>
+              <div className={`${styles.slideInner} av-slide`}>
                 {group.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard key={product.id} product={product} className="av-card--carousel" />
                 ))}
               </div>
             </div>

@@ -35,7 +35,7 @@ const getCardObserver = () => {
   return avCardObserver;
 };
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, className = '' }) => {
   const router = useRouter();
   const { items, addToCart, removeFromCart } = useCart();
   const { toggleFavorite, isFavorite } = useFavorites();
@@ -247,7 +247,7 @@ const ProductCard = ({ product }) => {
     <div
       ref={cardRef}
       data-av-card
-      className={`${styles.card} av-card av-card-w av-card-hover`}
+      className={`${styles.card} av-card av-card-w av-card-hover ${className}`.trim()}
     >
       <div className={`av-card-media ${styles.imageWrapper}`}>
         <Image

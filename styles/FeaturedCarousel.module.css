@@ -20,21 +20,18 @@
   padding: 8px 0 12px;
   display: flex;
   justify-content: center;
+  align-items: flex-start;
 }
 
 .slideInner {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: stretch;
-  gap: 1.25rem;
   width: 100%;
   max-width: 1480px;
+  margin: 0 auto;
 }
 
 @media (max-width: 640px) {
   .slideInner {
-    gap: 0.75rem;
+    max-width: none;
   }
 }
 

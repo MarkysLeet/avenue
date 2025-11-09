@@ -15,7 +15,7 @@ const handleAnchorClick = (event) => {
 
 const Hero = () => {
   return (
-    <section className={styles.hero}>
+    <section className={`${styles.hero} av-hero-full`}>
       <div className={styles.content}>
         <span className={styles.kicker}>Премиальный уход дома</span>
         <h1>Профессиональный уход. Салонное качество. Дома.</h1>
