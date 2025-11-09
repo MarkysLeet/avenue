@@ -16,13 +16,11 @@ const CatalogPage = () => {
       <section className={styles.section}>
         <h1>{categoryData ? categoryData.name : 'Каталог'}</h1>
         {categoryData && <p className={styles.description}>{categoryData.description}</p>}
-        <div className="av-grid-center">
-          <div className="av-grid-lock">
-            <div className={`${styles.grid} av-grid-products`}>
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+        <div className="av-grid-shell">
+          <div className={`${styles.grid} av-grid-products`}>
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
           </div>
         </div>
         {products.length === 0 && (

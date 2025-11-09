@@ -8,13 +8,17 @@ const CategoryGrid = ({ categories }) => {
         const targetSlug = category.id || category.slug;
         const href = targetSlug ? `/categories/${targetSlug}` : '/categories';
         return (
-          <Link key={category.id || category.slug} href={href} className={styles.card}>
+          <article key={category.id || category.slug} className={`${styles.card} av-cat-card`}>
             {category.badge ? <span className={styles.badge}>{category.badge}</span> : null}
-            <span className={styles.icon} aria-hidden="true" />
-            <h3>{category.name}</h3>
-            <p>{category.description}</p>
-            <span className={styles.cta}>Перейти в каталог</span>
-          </Link>
+            <div className="av-cat-body">
+              <span className={styles.icon} aria-hidden="true" />
+              <h3>{category.name}</h3>
+              <p>{category.description}</p>
+            </div>
+            <Link href={href} className={`av-cat-cta ${styles.cta}`}>
+              Перейти
+            </Link>
+          </article>
         );
       })}
     </div>

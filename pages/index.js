@@ -3,6 +3,7 @@ import Layout from '../components/Layout';
 import Hero from '../components/Hero';
 import CategoryGrid from '../components/CategoryGrid';
 import FeaturedCarousel from '../components/FeaturedCarousel';
+import FloatingShapes from '../components/FloatingShapes';
 import { categories, products } from '../data/products';
 import styles from '../styles/Home.module.css';
 
@@ -28,11 +29,14 @@ const Home = () => {
     <Layout>
       <Hero />
       <section className={styles.section} id="catalog">
-        <div className={styles.sectionHeader}>
-          <h2>Категории</h2>
-          <p>Выберите направление ухода и соберите собственный салон красоты дома.</p>
+        <FloatingShapes />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <div className={styles.sectionHeader}>
+            <h2>Категории</h2>
+            <p>Выберите направление ухода и соберите собственный салон красоты дома.</p>
+          </div>
+          <CategoryGrid categories={categories} />
         </div>
-        <CategoryGrid categories={categories} />
       </section>
       <section className={`${styles.section} ${styles.softSection} av-scroll-margin`} id="featured">
         <div className={styles.sectionHeader}>

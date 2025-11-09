@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import FloatingShapes from './FloatingShapes';
 import styles from '../styles/Hero.module.css';
 
 const handleAnchorClick = (event) => {
@@ -16,6 +17,7 @@ const handleAnchorClick = (event) => {
 const Hero = () => {
   return (
     <section className={`${styles.hero} av-hero-full`}>
+      <FloatingShapes />
       <div className={styles.content}>
         <span className={styles.kicker}>Премиальный уход дома</span>
         <h1>Профессиональный уход. Салонное качество. Дома.</h1>
