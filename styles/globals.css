@@ -79,17 +79,24 @@ html {
   scroll-behavior: smooth;
 }
 
-/* --- Avenue: hard 4-up grid with wrap --- */
+/* --- Avenue: refined 4-up grid with balanced spacing and side padding --- */
+
 :root {
-  --av-card-w: 340px;
-  --av-gap: 20px;
+  --av-card-w: 340px; /* ширина карточки */
+  --av-gap: 16px; /* расстояние между карточками */
+  --av-side-padding: 40px; /* поля по бокам */
 }
 
+/* Контейнер ограничивает ширину и добавляет боковые поля */
 .av-grid-lock {
   width: 100%;
+  max-width: calc(4 * var(--av-card-w) + 3 * var(--av-gap) + 2 * var(--av-side-padding));
   margin-inline: auto;
+  padding-inline: var(--av-side-padding);
+  box-sizing: border-box;
 }
 
+/* Грид: 4 карточки в ряд, плотнее, без чрезмерных промежутков */
 .av-grid-products {
   display: grid !important;
   grid-template-columns: repeat(4, var(--av-card-w)) !important;
@@ -98,13 +105,20 @@ html {
   align-items: stretch;
 }
 
+/* адаптив: 3/2/1 колонки */
 @media (max-width: 1280px) {
+  .av-grid-lock {
+    max-width: calc(3 * var(--av-card-w) + 2 * var(--av-gap) + 2 * var(--av-side-padding));
+  }
   .av-grid-products {
     grid-template-columns: repeat(3, var(--av-card-w)) !important;
   }
 }
 
 @media (max-width: 1024px) {
+  .av-grid-lock {
+    max-width: calc(2 * var(--av-card-w) + var(--av-gap) + 2 * var(--av-side-padding));
+  }
   .av-grid-products {
     grid-template-columns: repeat(2, var(--av-card-w)) !important;
     justify-content: center;
@@ -112,12 +126,17 @@ html {
 }
 
 @media (max-width: 640px) {
+  .av-grid-lock {
+    max-width: none;
+    padding-inline: 20px;
+  }
   .av-grid-products {
     grid-template-columns: 1fr !important;
     gap: 12px !important;
   }
 }
 
+/* Карточка: фикс ширина на десктопе, 100% на мобайле */
 .av-card-w {
   width: var(--av-card-w);
 }
