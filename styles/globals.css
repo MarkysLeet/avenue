@@ -79,28 +79,65 @@ html {
   scroll-behavior: smooth;
 }
 
-/* --- Avenue: robust product grid --- */
+/* --- Avenue: fixed 4-up grid --- */
+/* Десктоп: ровно 4 колонки фиксированной ширины, карточки не тянутся */
 .av-grid-products {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  justify-content: space-between;
   gap: 1.25rem;
-  align-items: stretch;
+  grid-template-columns: repeat(4, 340px);
 }
 
-@media (min-width: 1536px) {
+/* <=1280px: 3 колонки того же размера (если 4 не влезают) */
+@media (max-width: 1280px) {
   .av-grid-products {
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    grid-template-columns: repeat(3, 340px);
+  }
+}
+
+/* <=1024px: 2 колонки, мобильнее — 1 колонка */
+@media (max-width: 1024px) {
+  .av-grid-products {
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
+    justify-content: center;
   }
 }
 
 @media (max-width: 640px) {
   .av-grid-products {
+    grid-template-columns: 1fr;
     gap: 0.75rem;
   }
 }
 
+/* Карточка фиксированной ширины на десктопе, 100% на мобиле */
 .av-card-w {
-  width: 100%;
+  width: 340px;
+}
+
+@media (max-width: 640px) {
+  .av-card-w {
+    width: 100%;
+  }
+}
+
+/* Кнопки в ряд на десктопе, в столбик на мобиле */
+.av-card-actions {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem !important;
+  margin-top: auto;
+}
+
+@media (max-width: 640px) {
+  .av-card-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Центрирование текста на кнопке «Подробнее» */
+.av-btn-center {
+  text-align: center;
 }
 
 .av-card-media {
@@ -128,23 +165,6 @@ html {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-}
-
-.av-card-actions {
-  margin-top: auto;
-  display: grid !important;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem !important;
-}
-
-@media (max-width: 640px) {
-  .av-card-actions {
-    grid-template-columns: 1fr;
-  }
-}
-
-.av-btn-center {
-  text-align: center;
 }
 
 .av-clamp-2,

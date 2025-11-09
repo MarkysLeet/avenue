@@ -22,7 +22,7 @@ const features = [
 ];
 
 const Home = () => {
-  const featured = products.slice(0, 4);
+  const featured = products.slice(0, 12);
 
   return (
     <Layout>

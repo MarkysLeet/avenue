@@ -1,26 +1,41 @@
 .carousel {
   position: relative;
+  overflow: hidden;
 }
 
-.track {
-  --gap: 24px;
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(240px, 1fr);
-  gap: var(--gap);
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding: 8px 4px 16px;
-  scrollbar-width: none;
+.viewport {
+  position: relative;
+  overflow: hidden;
 }
 
-.track::-webkit-scrollbar {
-  display: none;
+.slider {
+  display: flex;
+  width: 100%;
+  transition: transform 0.45s ease;
+  will-change: transform;
 }
 
 .slide {
-  scroll-snap-align: start;
+  flex: 0 0 100%;
+  padding: 8px 0 12px;
   display: flex;
+  justify-content: center;
+}
+
+.slideInner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 1480px;
+}
+
+@media (max-width: 640px) {
+  .slideInner {
+    gap: 0.75rem;
+  }
 }
 
 .navButton {
@@ -110,30 +125,7 @@
 }
 
 @media (max-width: 768px) {
-  .track {
-    --gap: 18px;
-    grid-auto-columns: minmax(70vw, 1fr);
-  }
-
   .navButton {
     display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  .track {
-    grid-auto-columns: minmax(280px, calc((100% - var(--gap)) / 2));
-  }
-}
-
-@media (min-width: 1024px) {
-  .track {
-    grid-auto-columns: minmax(280px, calc((100% - var(--gap) * 2) / 3));
-  }
-}
-
-@media (min-width: 1280px) {
-  .track {
-    grid-auto-columns: minmax(300px, calc((100% - var(--gap) * 3) / 4));
   }
 }
