@@ -1,5 +1,5 @@
 .section {
-  margin-top: 72px;
+  margin-top: 64px;
 }
 
 .sectionHeader {
@@ -154,6 +154,10 @@
 }
 
 @media (max-width: 900px) {
+  .section {
+    margin-top: 40px;
+  }
+
   .softSection,
   .whySection,
   .promoSection {

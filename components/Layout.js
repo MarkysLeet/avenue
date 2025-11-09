@@ -14,7 +14,9 @@ const Layout = ({ children, title = 'Avenue Beauty — косметика и у�
         />
       </Head>
       <Header />
-      <main className={styles.main}>{children}</main>
+      <main className={styles.main}>
+        <div className={styles.container}>{children}</div>
+      </main>
       <Footer />
     </div>
   );

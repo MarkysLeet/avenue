@@ -10,6 +10,7 @@ const CategoryGrid = ({ categories }) => {
         return (
           <Link key={category.id || category.slug} href={href} className={styles.card}>
             {category.badge ? <span className={styles.badge}>{category.badge}</span> : null}
+            <span className={styles.icon} aria-hidden="true" />
             <h3>{category.name}</h3>
             <p>{category.description}</p>
             <span className={styles.cta}>Перейти в каталог</span>
