@@ -32,6 +32,60 @@
   margin-bottom: 24px;
 }
 
+.av-product-rating {
+  margin-top: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.av-product-rating h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.av-stars {
+  display: inline-flex;
+  gap: 10px;
+}
+
+.av-star {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.av-star svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: #ff0080;
+  stroke-width: 1.6px;
+}
+
+.av-star-active svg,
+.av-star:hover svg,
+.av-star:focus-visible svg {
+  fill: #ff0080;
+}
+
+.av-star:hover,
+.av-star:focus-visible {
+  transform: scale(1.08);
+  outline: none;
+}
+
+.av-rating-note {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
+
 .addButton {
   padding: 14px 28px;
   border: none;

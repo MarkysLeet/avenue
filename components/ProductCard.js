@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { createPortal } from 'react-dom';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useCart } from '../contexts/CartContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -54,15 +54,8 @@ const ProductCard = ({ product, className = '' }) => {
   const deniedTimerRef = useRef(null);
   const isMountedRef = useRef(true);
   const [isClient, setIsClient] = useState(false);
-  const [userRating, setUserRating] = useState(product.rating || 0);
-  const [hoverRating, setHoverRating] = useState(null);
-
   const favoriteActive = isAuthenticated && isFavorite(product.id);
   const inCart = items.some((item) => item.id === product.id);
-  const displayedRating = useMemo(
-    () => (hoverRating != null ? hoverRating : userRating || 0),
-    [hoverRating, userRating]
-  );
 
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -108,10 +101,6 @@ const ProductCard = ({ product, className = '' }) => {
       }
     };
   }, []);
-
-  useEffect(() => {
-    setUserRating(product.rating || 0);
-  }, [product]);
 
   const triggerButtonAnimation = () => {
     if (buttonTimerRef.current) {
@@ -253,27 +242,6 @@ const ProductCard = ({ product, className = '' }) => {
     });
   };
 
-  const handleRate = (value, event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (!isAuthenticated) {
-      toast({
-        type: 'warning',
-        message: 'Войдите в аккаунт, чтобы оценивать товары',
-        actionLabel: 'Войти',
-        onAction: () => {
-          router.push(`/auth/login?returnTo=/products/${product.id}`);
-        }
-      });
-      setHoverRating(null);
-      return;
-    }
-
-    setUserRating(value);
-    setHoverRating(null);
-    toast({ type: 'success', message: `Спасибо за оценку ${value} из 5` });
-  };
-
   return (
     <div
       ref={cardRef}
@@ -281,6 +249,14 @@ const ProductCard = ({ product, className = '' }) => {
       className={`${styles.card} av-card av-card-w av-card-hover ${className}`.trim()}
     >
       <div className={`av-card-media ${styles.imageWrapper}`}>
+        {typeof product.rating === 'number' ? (
+          <span
+            className="av-rating-badge"
+            aria-label={`Средняя оценка ${product.rating.toFixed(1)} из 5`}
+          >
+            {product.rating.toFixed(1).replace(/\.0$/, '')} ★
+          </span>
+        ) : null}
         <Image
           src={product.image}
           alt={product.name}
@@ -312,37 +288,6 @@ const ProductCard = ({ product, className = '' }) => {
       </div>
       <div className={`av-card-body ${styles.content}`}>
         <h3 className="av-clamp-2">{product.name}</h3>
-        <div className={styles['av-rating']}>
-          <span className={styles['av-rating-label']} aria-hidden="true">
-            ★
-          </span>
-          <div className={styles['av-rating-stars']} role="radiogroup" aria-label="Оценить товар">
-            {[1, 2, 3, 4, 5].map((value) => {
-              const isActive = displayedRating >= value;
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  className={`${styles['av-rating-star']} ${
-                    isActive ? styles['av-rating-star-active'] : ''
-                  }`.trim()}
-                  onClick={(event) => handleRate(value, event)}
-                  onMouseEnter={() => (isAuthenticated ? setHoverRating(value) : setHoverRating(null))}
-                  onMouseLeave={() => setHoverRating(null)}
-                  onFocus={() => (isAuthenticated ? setHoverRating(value) : setHoverRating(null))}
-                  onBlur={() => setHoverRating(null)}
-                  role="radio"
-                  aria-label={`Оценить на ${value} из 5`}
-                  aria-checked={userRating === value}
-                >
-                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                    <path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                  </svg>
-                </button>
-              );
-            })}
-          </div>
-        </div>
         <p className={`${styles.description} av-clamp-3`}>{product.description}</p>
         <div className={`${styles.footer} av-card-footer`}>
           <span className={styles.price}>{product.price.toLocaleString()} ₺</span>

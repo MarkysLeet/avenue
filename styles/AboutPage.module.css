@@ -1,8 +1,11 @@
-.av-about {
+.av-about-page {
   position: relative;
-  padding: 64px 0 96px;
+  overflow: hidden;
+  background: #fff7f9;
+  padding: 96px 0 120px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  gap: 72px;
 }
 
 .av-sr-only {
@@ -17,51 +20,54 @@
   border: 0;
 }
 
-.av-about :global(.av-section) {
-  max-width: 720px;
-  width: 100%;
+.av-about-hero {
+  max-width: 960px;
   margin: 0 auto;
-  background: linear-gradient(180deg, rgba(255, 248, 251, 0.9), #ffffff 80%);
+  padding: 72px 32px;
+  text-align: center;
   border-radius: 28px;
-  padding: 48px 40px;
-  box-shadow: 0 24px 60px rgba(26, 26, 26, 0.08);
+  background: linear-gradient(180deg, rgba(255, 192, 203, 0.2) 0%, rgba(255, 248, 251, 0.85) 100%);
+  box-shadow: 0 30px 70px rgba(26, 26, 26, 0.08);
+  position: relative;
+  z-index: 1;
 }
 
-.av-about-title {
-  font-size: clamp(2.2rem, 4vw, 3rem);
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.av-about-lead {
-  margin: 0 auto 32px;
-  max-width: 520px;
-  text-align: center;
+.av-about-hero p {
+  margin: 18px auto 0;
+  max-width: 560px;
   color: var(--color-muted);
-  line-height: 1.7;
+  line-height: 1.8;
 }
 
-.av-about-info {
+.av-about-infoGrid {
+  max-width: 1040px;
+  margin: 0 auto;
   display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 24px;
-  margin-bottom: 40px;
+  position: relative;
+  z-index: 1;
 }
 
-.av-about-block {
-  background: rgba(255, 248, 251, 0.65);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 18px 36px rgba(26, 26, 26, 0.05);
+.av-about-card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 32px 28px;
   border: 1px solid rgba(231, 223, 228, 0.7);
+  box-shadow: 0 22px 48px rgba(26, 26, 26, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.av-about-block h3 {
-  margin: 0 0 12px;
-  font-size: 1.1rem;
+.av-about-card h3 {
+  margin: 0;
+  font-size: 1.15rem;
 }
 
-.av-about-block p {
-  margin: 6px 0;
+.av-about-card p {
+  margin: 0;
+  color: var(--color-muted);
   line-height: 1.6;
 }
 
@@ -82,28 +88,35 @@
   outline: none;
 }
 
-.av-about-form {
-  display: grid;
-  gap: 16px;
-  padding: 32px 28px;
-  border-radius: 22px;
-  background: #ffffff;
-  border: 1px solid rgba(231, 223, 228, 0.8);
-  box-shadow: 0 20px 42px rgba(26, 26, 26, 0.06);
+.av-about-contact {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 40px;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 26px;
+  box-shadow: 0 28px 64px rgba(26, 26, 26, 0.08);
+  border: 1px solid rgba(231, 223, 228, 0.7);
+  position: relative;
+  z-index: 1;
 }
 
-.av-about-form h3 {
-  margin: 0 0 8px;
+.av-about-contact h3 {
+  margin: 0 0 20px;
   text-align: center;
+}
+
+.av-about-form {
+  display: grid;
+  gap: 18px;
 }
 
 .av-about-input,
 .av-about-textarea {
   width: 100%;
-  border-radius: 16px;
+  border-radius: 18px;
   border: 1px solid rgba(231, 223, 228, 0.9);
-  padding: 12px 16px;
-  background: rgba(255, 248, 251, 0.65);
+  padding: 14px 18px;
+  background: rgba(255, 248, 251, 0.7);
   font-size: 1rem;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -111,7 +124,7 @@
 .av-about-input:focus-visible,
 .av-about-textarea:focus-visible {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(226, 0, 122, 0.15);
+  box-shadow: 0 0 0 3px rgba(226, 0, 122, 0.14);
   outline: none;
 }
 
@@ -122,7 +135,7 @@
 
 .av-about-submit {
   justify-self: center;
-  padding: 12px 32px;
+  padding: 14px 36px;
   border-radius: 999px;
   background: var(--color-primary);
   color: #ffffff;
@@ -135,21 +148,36 @@
 .av-about-submit:hover,
 .av-about-submit:focus-visible {
   transform: translateY(-1px);
-  box-shadow: 0 16px 30px rgba(226, 0, 122, 0.2);
+  box-shadow: 0 18px 36px rgba(226, 0, 122, 0.22);
   outline: none;
 }
 
-@media (max-width: 768px) {
-  .av-about {
-    padding: 40px 0 72px;
+@media (max-width: 1024px) {
+  .av-about-page {
+    padding: 80px 0 100px;
+    gap: 56px;
   }
 
-  .av-about :global(.av-section) {
-    border-radius: 22px;
-    padding: 36px 24px;
+  .av-about-hero {
+    padding: 56px 24px;
   }
 
-  .av-about-form {
-    padding: 24px;
+  .av-about-contact {
+    padding: 40px 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .av-about-page {
+    padding: 64px 0 80px;
+    gap: 48px;
+  }
+
+  .av-about-hero {
+    padding: 48px 20px;
+  }
+
+  .av-about-contact {
+    padding: 32px 24px;
   }
 }

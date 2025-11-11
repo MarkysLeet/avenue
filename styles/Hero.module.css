@@ -1,3 +1,18 @@
+.av-hero-section {
+  position: relative;
+  width: 100%;
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.av-hero-shell {
+  position: relative;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+  box-sizing: border-box;
+}
+
 .hero {
   position: relative;
   display: grid;
@@ -13,7 +28,9 @@
 .content {
   position: relative;
   z-index: 1;
-  max-width: 520px;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: 0;
 }
 
 .kicker {
@@ -132,6 +149,14 @@
 @media (max-width: 900px) {
   .hero {
     padding: 40px 24px;
+  }
+
+  .av-hero-section {
+    padding: 56px 0;
+  }
+
+  .av-hero-shell {
+    padding: 0 24px;
   }
 
   .stage {

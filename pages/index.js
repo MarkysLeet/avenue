@@ -4,6 +4,7 @@ import Hero from '../components/Hero';
 import CategoryGrid from '../components/CategoryGrid';
 import FeaturedCarousel from '../components/FeaturedCarousel';
 import FloatingShapes from '../components/FloatingShapes';
+import SectionWrapper from '../components/SectionWrapper';
 import { categories, products } from '../data/products';
 import styles from '../styles/Home.module.css';
 
@@ -28,7 +29,7 @@ const Home = () => {
   return (
     <Layout>
       <Hero />
-      <section className={styles.section} id="catalog">
+      <SectionWrapper as="section" className={styles.section} id="catalog">
         <FloatingShapes />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <div className={styles.sectionHeader}>
@@ -37,15 +38,19 @@ const Home = () => {
           </div>
           <CategoryGrid categories={categories} />
         </div>
-      </section>
-      <section className={`${styles.section} ${styles.softSection} av-scroll-margin`} id="featured">
+      </SectionWrapper>
+      <SectionWrapper
+        as="section"
+        className={`${styles.section} ${styles.softSection} av-scroll-margin`}
+        id="featured"
+      >
         <div className={styles.sectionHeader}>
           <h2>Новинки &amp; рекомендации</h2>
           <p>Подборка продуктов, которые наши клиенты выбирают снова и снова.</p>
         </div>
         <FeaturedCarousel products={featured} />
-      </section>
-      <section className={`${styles.section} ${styles.whySection}`}>
+      </SectionWrapper>
+      <SectionWrapper as="section" className={`${styles.section} ${styles.whySection}`}>
         <div className={styles.sectionHeaderCentered}>
           <h2>Почему нас выбирают</h2>
           <p>Уделяем внимание каждой детали — от флакона до сервиса.</p>
@@ -59,8 +64,8 @@ const Home = () => {
             </div>
           ))}
         </div>
-      </section>
-      <section className={`${styles.section} ${styles.promoSection}`}>
+      </SectionWrapper>
+      <SectionWrapper as="section" className={`${styles.section} ${styles.promoSection}`}>
         <div className={styles.promoContent}>
           <div className={styles.promoVisual} aria-hidden="true" />
           <div className={styles.promoText}>
@@ -71,7 +76,7 @@ const Home = () => {
             </Link>
           </div>
         </div>
-      </section>
+      </SectionWrapper>
     </Layout>
   );
 };
