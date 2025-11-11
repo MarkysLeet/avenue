@@ -251,10 +251,10 @@ const ProductCard = ({ product, className = '' }) => {
       <div className={`av-card-media ${styles.imageWrapper}`}>
         {typeof product.rating === 'number' ? (
           <span
-            className="av-rating-badge"
+            className={styles.avRatingBadge}
             aria-label={`Средняя оценка ${product.rating.toFixed(1)} из 5`}
           >
-            {product.rating.toFixed(1).replace(/\.0$/, '')} ★
+            {product.rating?.toFixed(1) ?? '—'} ★
           </span>
         ) : null}
         <Image
