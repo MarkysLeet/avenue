@@ -1,9 +1,17 @@
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import styles from '../styles/Footer.module.css';
+
+const motionProps = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6, ease: 'easeOut' }
+};
 
 const Footer = () => {
   return (
-    <footer className={styles.footer}>
+    <motion.footer className={styles.footer} {...motionProps}>
       <div className={styles.content}>
         <p>© {new Date().getFullYear()} Avenue Beauty. Все права защищены.</p>
         <p className={styles.caption}>
@@ -36,7 +44,7 @@ const Footer = () => {
           </a>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

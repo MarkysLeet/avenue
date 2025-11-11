@@ -7,7 +7,8 @@ import styles from '../styles/Header.module.css';
 
 const navLinks = [
   { href: '/', label: 'Главная' },
-  { href: '/categories', label: 'Категории' }
+  { href: '/categories', label: 'Категории' },
+  { href: '/about', label: 'О нас' }
 ];
 
 const Header = () => {

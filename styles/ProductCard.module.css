@@ -238,3 +238,52 @@
     transform: scale(1);
   }
 }
+
+.av-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.av-rating-label {
+  font-size: 1.1rem;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.av-rating-stars {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.av-rating-star {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: var(--color-border-strong, #d6b5c5);
+}
+
+.av-rating-star svg {
+  width: 22px;
+  height: 22px;
+  fill: rgba(231, 223, 228, 0.8);
+  transition: fill 0.2s ease, transform 0.2s ease;
+}
+
+.av-rating-star-active svg {
+  fill: var(--color-primary);
+}
+
+.av-rating-star:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.av-rating-star:hover svg {
+  transform: scale(1.1);
+}

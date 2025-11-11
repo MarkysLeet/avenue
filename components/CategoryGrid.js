@@ -1,9 +1,17 @@
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import styles from '../styles/CategoryGrid.module.css';
+
+const motionProps = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6, ease: 'easeOut' }
+};
 
 const CategoryGrid = ({ categories }) => {
   return (
-    <div className={styles.grid}>
+    <motion.div className={styles.grid} {...motionProps}>
       {categories.map((category) => {
         const targetSlug = category.id || category.slug;
         const href = targetSlug ? `/categories/${targetSlug}` : '/categories';
@@ -21,7 +29,7 @@ const CategoryGrid = ({ categories }) => {
           </article>
         );
       })}
-    </div>
+    </motion.div>
   );
 };
 

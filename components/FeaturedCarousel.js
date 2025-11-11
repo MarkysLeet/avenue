@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import ProductCard from './ProductCard';
 import styles from '../styles/FeaturedCarousel.module.css';
 
@@ -145,8 +146,15 @@ const FeaturedCarousel = ({ products = [] }) => {
     return null;
   }
 
+  const motionProps = {
+    initial: { opacity: 0, y: 40 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true },
+    transition: { duration: 0.6, ease: 'easeOut' }
+  };
+
   return (
-    <section
+    <motion.section
       className={`${styles.carousel} av-carousel`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -157,6 +165,7 @@ const FeaturedCarousel = ({ products = [] }) => {
       role="region"
       aria-roledescription="carousel"
       aria-label="Новинки и рекомендации"
+      {...motionProps}
     >
       <div className={styles.viewport}>
         <div
@@ -210,7 +219,7 @@ const FeaturedCarousel = ({ products = [] }) => {
         </>
       )}
       <p className={styles.visuallyHidden} aria-live="polite" ref={liveMessageRef} />
-    </section>
+    </motion.section>
   );
 };
 

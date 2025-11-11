@@ -55,8 +55,30 @@
   color: var(--color-muted);
 }
 
+.av-related {
+  margin-top: 72px;
+  display: grid;
+  gap: 28px;
+}
+
+.av-related h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+}
+
+.av-related-hint {
+  text-align: center;
+  color: var(--color-muted);
+  font-size: 0.95rem;
+}
+
 @media (max-width: 768px) {
   .imageWrapper {
     height: 320px;
+  }
+
+  .av-related {
+    margin-top: 52px;
+    gap: 20px;
   }
 }

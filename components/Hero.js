@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import FloatingShapes from './FloatingShapes';
 import styles from '../styles/Hero.module.css';
 
@@ -14,9 +15,16 @@ const handleAnchorClick = (event) => {
   }
 };
 
+const motionProps = {
+  initial: { opacity: 0, y: 40 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true },
+  transition: { duration: 0.6, ease: 'easeOut' }
+};
+
 const Hero = () => {
   return (
-    <section className={`${styles.hero} av-hero-full`}>
+    <motion.section className={`${styles.hero} av-hero-full`} {...motionProps}>
       <FloatingShapes />
       <div className={styles.content}>
         <span className={styles.kicker}>Премиальный уход дома</span>
@@ -54,7 +62,7 @@ const Hero = () => {
           <div className={styles.accentBubble} />
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

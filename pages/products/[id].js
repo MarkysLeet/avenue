@@ -1,9 +1,12 @@
+import { useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Layout from '../../components/Layout';
-import { getProductById } from '../../data/products';
+import ProductCard from '../../components/ProductCard';
+import { getProductById, products } from '../../data/products';
 import { useCart } from '../../contexts/CartContext';
 import { useToast } from '../../contexts/ToastContext';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from '../../styles/ProductPage.module.css';
 
 const ProductPage = () => {
@@ -12,6 +15,7 @@ const ProductPage = () => {
   const product = id ? getProductById(id) : null;
   const { addToCart } = useCart();
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
 
   if (!product) {
     return (
@@ -28,6 +32,15 @@ const ProductPage = () => {
     toast({ type: 'success', message: `${product.name} добавлен в корзину` });
     router.push('/cart');
   };
+
+  const relatedProducts = useMemo(() => {
+    if (!product) {
+      return [];
+    }
+    return products
+      .filter((item) => item.category === product.category && item.id !== product.id)
+      .slice(0, 4);
+  }, [product]);
 
   return (
     <Layout title={`${product.name} — Avenue Beauty`}>
@@ -50,6 +63,23 @@ const ProductPage = () => {
           </button>
         </div>
       </section>
+      {relatedProducts.length > 0 && (
+        <section className={styles['av-related']}>
+          <h2>Похожие товары</h2>
+          <div className="av-grid-shell">
+            <div className="av-grid-products">
+              {relatedProducts.map((related) => (
+                <ProductCard key={related.id} product={related} />
+              ))}
+            </div>
+          </div>
+          <p className={styles['av-related-hint']}>
+            {isAuthenticated
+              ? 'Оцените товар или добавьте его в избранное ❤️'
+              : 'Войдите, чтобы оценивать и добавлять в избранное'}
+          </p>
+        </section>
+      )}
     </Layout>
   );
 };
