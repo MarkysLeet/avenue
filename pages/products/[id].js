@@ -17,6 +17,15 @@ const ProductPage = () => {
   const { toast } = useToast();
   const { isAuthenticated } = useAuth();
 
+  const relatedProducts = useMemo(() => {
+    if (!product) {
+      return [];
+    }
+    return products
+      .filter((item) => item.category === product.category && item.id !== product.id)
+      .slice(0, 4);
+  }, [product]);
+
   if (!product) {
     return (
       <Layout title="Товар не найден">
@@ -32,15 +41,6 @@ const ProductPage = () => {
     toast({ type: 'success', message: `${product.name} добавлен в корзину` });
     router.push('/cart');
   };
-
-  const relatedProducts = useMemo(() => {
-    if (!product) {
-      return [];
-    }
-    return products
-      .filter((item) => item.category === product.category && item.id !== product.id)
-      .slice(0, 4);
-  }, [product]);
 
   return (
     <Layout title={`${product.name} — Avenue Beauty`}>

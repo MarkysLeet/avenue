@@ -86,7 +86,7 @@ const statusVariants = {
 
 const AccountPage = () => {
   const router = useRouter();
-  const { push, replace } = router;
+  const { push, replace, query } = router;
   const { user, isAuthenticated, updateProfile, changeEmail, changePassword } = useAuth();
   const { addToCart } = useCart();
   const { toast } = useToast();
@@ -239,11 +239,11 @@ const AccountPage = () => {
   }, [user]);
 
   useEffect(() => {
-    const { tab } = router.query;
+    const { tab } = query;
     if (typeof tab === 'string' && tabs.some((item) => item.id === tab)) {
       setActiveTab(tab);
     }
-  }, [router.query.tab]);
+  }, [query]);
 
   useEffect(
     () => () => {
